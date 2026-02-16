@@ -39,9 +39,9 @@ class TestColorExtraction:
         for category_colors in result["colors"].values():
             for entry in category_colors:
                 all_color_values.append(entry["value"])
-        # The CSS has #333333, #222222, #444444, #555555, #ffffff, #ed247c, etc.
-        assert any("#333333" in v for v in all_color_values), \
-            f"Expected #333333 in colors, got: {all_color_values}"
+        # cssutils may shorten hex colors (#333333 -> #333), so check for either form
+        assert any("#333333" in v or "#333" in v for v in all_color_values), \
+            f"Expected #333333 or #333 in colors, got: {all_color_values}"
 
     def test_extracts_color_categories(self, sample_css):
         result = eds.extract_design_tokens_from_css(sample_css)
