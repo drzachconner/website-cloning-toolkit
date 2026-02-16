@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-server-playwright"]
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": ["firecrawl-mcp-server"],
+      "env": {
+        "FIRECRAWL_API_KEY": "your-api-key-here"
+      }
+    },
+    "screenshot": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-screenshot"]
+    }
+  }
+}

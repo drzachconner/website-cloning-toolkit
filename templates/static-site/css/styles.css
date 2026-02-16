@@ -1,0 +1,310 @@
+/*
+ * Website Clone - Base Stylesheet
+ *
+ * Replace the CSS custom properties below with values extracted
+ * from the target site. These control the entire theme.
+ *
+ * Usage:
+ *   1. Run extract-css.py on the target site
+ *   2. Replace custom property values with extracted values
+ *   3. Add component-specific styles as needed
+ */
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES - Replace with extracted theme values
+   ============================================================ */
+
+:root {
+    /* Typography - replace with extracted font families */
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Font sizes - replace with extracted values */
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 2rem;
+    --font-size-h3: 1.5rem;
+    --font-size-h4: 1.25rem;
+    --font-size-body: 1rem;
+    --font-size-small: 0.875rem;
+
+    /* Colors - replace with extracted palette */
+    --color-heading: #333333;
+    --color-body: #555555;
+    --color-link: #0066cc;
+    --color-link-hover: #004499;
+    --color-strong: #111111;
+
+    /* Button/CTA colors */
+    --color-cta-bg: #0066cc;
+    --color-cta-text: #ffffff;
+    --color-cta-hover-bg: #004499;
+    --color-cta-hover-text: #ffffff;
+
+    /* Background colors */
+    --color-bg-page: #ffffff;
+    --color-bg-section: #f5f5f5;
+    --color-bg-footer: #111111;
+    --color-bg-header: #ffffff;
+
+    /* Border colors */
+    --color-border: #eeeeee;
+    --color-border-accent: #999999;
+
+    /* Layout - replace with extracted dimensions */
+    --max-width: 1200px;
+    --content-padding: 2rem;
+    --section-spacing: 4rem;
+    --grid-gap: 2rem;
+
+    /* Border radius */
+    --radius-small: 4px;
+    --radius-medium: 8px;
+    --radius-large: 25px;
+    --radius-round: 50%;
+}
+
+
+/* ============================================================
+   RESET / NORMALIZE
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: 1.6;
+    color: var(--color-body);
+    background-color: var(--color-bg-page);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    color: var(--color-link);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-link-hover);
+}
+
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--color-heading);
+    line-height: 1.2;
+    margin-bottom: 0.5em;
+}
+
+h1 { font-size: var(--font-size-h1); }
+h2 { font-size: var(--font-size-h2); }
+h3 { font-size: var(--font-size-h3); }
+h4 { font-size: var(--font-size-h4); }
+
+p {
+    margin-bottom: 1em;
+}
+
+strong {
+    color: var(--color-strong);
+}
+
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding);
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.site-header {
+    background: var(--color-bg-header);
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 0;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 60px;
+    width: auto;
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.main-nav a {
+    font-weight: 600;
+    color: var(--color-heading);
+}
+
+.main-nav a:hover {
+    color: var(--color-link-hover);
+}
+
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.site-main {
+    padding: var(--section-spacing) 0;
+}
+
+.content-section {
+    margin-bottom: var(--section-spacing);
+}
+
+.hero {
+    margin-bottom: var(--section-spacing);
+}
+
+
+/* ============================================================
+   CTA
+   ============================================================ */
+
+.btn-cta {
+    display: inline-block;
+    padding: 12px 32px;
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn-cta:hover {
+    background: var(--color-cta-hover-bg);
+    color: var(--color-cta-hover-text);
+}
+
+.cta-section {
+    background: var(--color-bg-section);
+    padding: 3rem;
+    border-radius: var(--radius-large);
+    text-align: center;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.site-footer {
+    background: var(--color-bg-footer);
+    color: #ffffff;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+
+/* ============================================================
+   UTILITY CLASSES - Add as needed from extracted site
+   ============================================================ */
+
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+.text-right  { text-align: right; }
+
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+
+/* Clear floats */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.cb {
+    clear: both;
+}
+
+
+/* ============================================================
+   RESPONSIVE - Adjust breakpoints to match target site
+   ============================================================ */
+
+@media (max-width: 1024px) {
+    :root {
+        --content-padding: 1.5rem;
+        --section-spacing: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-h1: 2rem;
+        --font-size-h2: 1.5rem;
+        --font-size-h3: 1.25rem;
+        --content-padding: 1rem;
+        --section-spacing: 2rem;
+    }
+
+    .site-header .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .main-nav ul {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --font-size-h1: 1.75rem;
+        --font-size-h2: 1.375rem;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+}
