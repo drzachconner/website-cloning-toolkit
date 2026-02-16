@@ -1,0 +1,76 @@
+{
+  "name": "website-clone-pipeline",
+  "version": "1.0.0",
+  "description": "5-phase website cloning pipeline with parallel extraction and validation",
+  "phases": [
+    {
+      "id": "capture",
+      "name": "Capture",
+      "description": "Scrape target site HTML, CSS, images, and screenshots",
+      "agent": "scraper",
+      "scripts": ["scrape-site.py"],
+      "inputs": {
+        "url": {"type": "string", "required": true, "description": "Target site URL"},
+        "output": {"type": "string", "required": true, "description": "Project output directory"},
+        "screenshots": {"type": "boolean", "default": true}
+      },
+      "outputs": ["mirror/", "screenshots/"],
+      "dependsOn": []
+    },
+    {
+      "id": "extract",
+      "name": "Extract Design System",
+      "description": "Analyze captured CSS to extract design tokens",
+      "agent": "design-analyst",
+      "parallel": true,
+      "tasks": [
+        {"script": "extract-css.py", "inputs": {"url": "{{capture.url}}", "output": "css/"}, "outputs": ["css/"]},
+        {"script": "extract-colors.py", "inputs": {"url": "{{capture.url}}", "output": "colors.json"}, "outputs": ["colors.json"]},
+        {"script": "extract-fonts.py", "inputs": {"url": "{{capture.url}}", "output": "fonts/"}, "outputs": ["fonts/"]},
+        {"script": "extract-design-system.py", "inputs": {"css": "css/styles.css", "output": "design-system.json", "html-dir": "mirror/"}, "outputs": ["design-system.json"]}
+      ],
+      "dependsOn": ["capture"]
+    },
+    {
+      "id": "generate",
+      "name": "Generate Code",
+      "description": "Produce initial HTML using extracted design system",
+      "agent": "code-generator",
+      "scripts": ["convert-html.py"],
+      "inputs": {
+        "input": "mirror/",
+        "output": "pages/",
+        "config": "class-mapping.json",
+        "template": "templates/page-template.html"
+      },
+      "outputs": ["pages/", "templates/"],
+      "dependsOn": ["extract"]
+    },
+    {
+      "id": "validate",
+      "name": "Validate",
+      "description": "Run visual diff, QA checks, and accessibility audit",
+      "agent": "qa-validator",
+      "parallel": true,
+      "tasks": [
+        {"script": "visual-diff.py", "inputs": {"original": "screenshots/", "clone": "pages/", "output": "report/visual-diff/", "metric": "ssim"}, "outputs": ["report/visual-diff/"]},
+        {"script": "qa-check.py", "inputs": {"pages": "pages/", "output": "report/qa-report.json"}, "outputs": ["report/qa-report.json"]},
+        {"script": "a11y-check.py", "inputs": {"url": "{{capture.url}}", "clone": "pages/", "output": "report/a11y-report.json"}, "outputs": ["report/a11y-report.json"]}
+      ],
+      "dependsOn": ["generate"]
+    },
+    {
+      "id": "refine",
+      "name": "Refine",
+      "description": "Iterative refinement based on validation results",
+      "agent": "code-generator",
+      "conditional": {
+        "field": "validate.visual-diff.ssim_score",
+        "operator": "<",
+        "value": 0.95
+      },
+      "scripts": ["convert-html.py"],
+      "dependsOn": ["validate"]
+    }
+  ]
+}

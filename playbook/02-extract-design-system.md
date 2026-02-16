@@ -30,7 +30,7 @@ These tools let you inspect design tokens directly in the browser without readin
 ### Using extract-css.py
 
 ```bash
-python scripts/extract-css.py --input mirror/raw-css/_style-*.css --output docs/design-tokens.md
+python scripts/extract-css.py --url "https://targetsite.com" --output css/cloned-styles.css --subset --html-dir mirror/extracted/
 ```
 
 The script parses the original CSS and extracts class definitions relevant to the content area, filtering out framework/utility classes.

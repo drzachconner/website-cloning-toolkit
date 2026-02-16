@@ -16,15 +16,15 @@ The toolkit was built from hard-won lessons cloning VanEveryChiropractic.com's c
 1. Create a project directory: `mkdir -p project-name/{mirror,screenshots,archive,css,images,pages,templates}`
 2. Mirror the target site's HTML and assets:
    ```bash
-   python scripts/mirror_site.py --url "https://example.com" --output mirror/
+   python scripts/scrape-site.py --url "https://example.com" --output mirror/
    ```
 3. Capture full-page screenshots of key pages:
    ```bash
-   python scripts/screenshot_pages.py --url "https://example.com/page" --output screenshots/
+   python scripts/scrape-site.py --url "https://example.com/page" --output screenshots/ --screenshots
    ```
 4. Download the site's CSS files for analysis:
    ```bash
-   python scripts/extract_css.py --url "https://example.com" --output mirror/css/
+   python scripts/extract-css.py --url "https://example.com" --output mirror/css/cloned-styles.css
    ```
 
 **Key lesson**: Screenshots are invaluable. They serve as the ground truth throughout every subsequent phase. Always capture them before doing anything else.
@@ -38,7 +38,7 @@ The toolkit was built from hard-won lessons cloning VanEveryChiropractic.com's c
 **Steps**:
 1. Parse the site's CSS to extract design tokens:
    ```bash
-   python scripts/extract_design_system.py --css mirror/css/style.css --output design-system.json
+   python scripts/extract-design-system.py --css mirror/css/style.css --output design-system.json
    ```
 2. Document the design system in CLAUDE.md (or a project-specific config) with these sections:
    - **Colors**: All hex values with their usage context (headings, body, links, hover states, backgrounds, borders)
@@ -76,14 +76,14 @@ The toolkit was built from hard-won lessons cloning VanEveryChiropractic.com's c
 **C. Conversion from existing content**:
 - If you have existing HTML content (like CMS exports), write a conversion script
 - Map old classes to new classes programmatically
-- See `scripts/convert_html.py` for the pattern
+- See `scripts/convert-html.py` for the pattern
 
 **Steps**:
 1. Create a reference template: `templates/page-template.html`
 2. Validate the template against screenshots visually
 3. Generate pages from the template, either manually or via script:
    ```bash
-   python scripts/convert_html.py --input archive/ --template templates/page-template.html --output pages/
+   python scripts/convert-html.py --input archive/ --output pages/ --config class-mapping.json --template templates/page-template.html
    ```
 
 **Key lesson**: Multi-pass conversion beats monolithic transformation. Do not try to convert everything in a single script run. Instead: rough structure first, then class mapping, then content refinement, then QA fixes.
@@ -101,7 +101,7 @@ The toolkit was built from hard-won lessons cloning VanEveryChiropractic.com's c
 
 Run the visual diff tool after each pass:
 ```bash
-python scripts/visual_diff.py --original screenshots/page.png --clone pages/page.html --output diff-report/
+python scripts/visual-diff.py --original screenshots/ --clone pages/ --output diff-report/
 ```
 
 **Key lesson**: Each pass should have a single focus. Trying to fix structure, classes, and content simultaneously leads to regressions.
@@ -113,7 +113,7 @@ python scripts/visual_diff.py --original screenshots/page.png --clone pages/page
 **Steps**:
 1. Run the automated QA checker:
    ```bash
-   python scripts/qa_check.py --pages pages/ --checklist checklists/qa-checklist.md
+   python scripts/qa-check.py --pages pages/ --checklist checklists/qa-checklist.md
    ```
 2. Visually compare each page against the original screenshots
 3. Walk through the QA checklist manually for edge cases
@@ -138,33 +138,13 @@ Use MCP (Model Context Protocol) servers when available for faster, more reliabl
 
 ### Playwright MCP
 **When to use**: Screenshots, interactive page scraping, pages that require JavaScript rendering, visual regression testing.
-```json
-// mcp-config/playwright.json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@anthropic/mcp-playwright"]
-    }
-  }
-}
-```
+**Config**: See `mcp-config/claude-mcp-settings.json` for the full MCP configuration and `mcp-config/recommended-servers.md` for setup guidance.
+**Setup**: Run `mcp-config/setup-mcp.sh` to install and configure MCP servers.
 **Capabilities**: Navigate pages, take screenshots, extract rendered HTML (post-JS), interact with elements, wait for dynamic content.
 
 ### Firecrawl MCP
 **When to use**: Bulk site scraping, extracting clean HTML/markdown from multiple pages, crawling entire site sections.
-```json
-// mcp-config/firecrawl.json
-{
-  "mcpServers": {
-    "firecrawl": {
-      "command": "npx",
-      "args": ["-y", "firecrawl-mcp"],
-      "env": { "FIRECRAWL_API_KEY": "<your-key>" }
-    }
-  }
-}
-```
+**Config**: See `mcp-config/claude-mcp-settings.json` for the full MCP configuration and `mcp-config/recommended-servers.md` for setup guidance.
 **Capabilities**: Crawl entire sites, extract structured content, handle anti-bot measures, return clean markdown.
 
 ### Screenshot MCP (or similar)
@@ -173,12 +153,12 @@ Use MCP (Model Context Protocol) servers when available for faster, more reliabl
 ### When to use scripts vs. MCP
 | Task | Use Script | Use MCP |
 |---|---|---|
-| Simple static HTML download | `mirror_site.py` | -- |
+| Simple static HTML download | `scrape-site.py` | -- |
 | JS-rendered pages | -- | Playwright |
 | Full-site crawl (50+ pages) | -- | Firecrawl |
-| Screenshots for reference | `screenshot_pages.py` | Playwright |
-| CSS extraction | `extract_css.py` | -- |
-| Visual diff | `visual_diff.py` | Screenshot MCP |
+| Screenshots for reference | `scrape-site.py --screenshots` | Playwright |
+| CSS extraction | `extract-css.py` | -- |
+| Visual diff | `visual-diff.py` | Screenshot MCP |
 
 ## Script Usage
 
@@ -187,57 +167,74 @@ All scripts are in `scripts/` and require Python 3.10+. Install dependencies fir
 pip install -r scripts/requirements.txt
 ```
 
-### mirror_site.py
-Download a site's HTML and static assets.
+### scrape-site.py
+Scrape a website using Playwright, saving HTML and optional screenshots.
 ```bash
-python scripts/mirror_site.py --url "https://example.com" --output mirror/ --depth 2
+python scripts/scrape-site.py --url "https://example.com" --output mirror/ --screenshots --sitemap
 ```
-- `--url`: Target site URL (required)
-- `--output`: Output directory (default: `mirror/`)
-- `--depth`: Crawl depth for following links (default: 1)
-- `--assets`: Also download CSS, JS, images (default: true)
+- `--url`: Single URL to scrape
+- `--urls-file`: Path to a text file containing URLs (one per line)
+- `--output`: Output directory for scraped content (required)
+- `--sitemap`: Discover additional URLs from the site's sitemap.xml
+- `--screenshots`: Take full-page screenshots of each page
+- `--selector`: CSS selector to extract specific content instead of full page
 
-### screenshot_pages.py
-Capture full-page screenshots using Playwright.
-```bash
-python scripts/screenshot_pages.py --url "https://example.com/page" --output screenshots/ --width 1440
-```
-- `--url`: Page URL or file with URLs (one per line)
-- `--output`: Screenshot output directory
-- `--width`: Viewport width in pixels (default: 1440)
-- `--full-page`: Capture full scrollable page (default: true)
+At least one of `--url` or `--urls-file` is required.
 
-### extract_css.py
+### extract-css.py
 Download and subset a site's CSS.
 ```bash
-python scripts/extract_css.py --url "https://example.com" --output css/cloned-styles.css --selectors ".entry-content,.bldr_callout,.bldr_cta"
+python scripts/extract-css.py --url "https://example.com" --output css/cloned-styles.css --subset --html-dir mirror/extracted/
 ```
-- `--url`: Target site URL (required)
-- `--output`: Output CSS file path
-- `--selectors`: Comma-separated CSS selectors to keep (optional; keeps all if omitted)
+- `--url`: Target page URL to discover CSS files from (required)
+- `--output`: Output path for the combined CSS file (required)
+- `--subset`: Subset CSS to only rules used in HTML files (requires `--html-dir`)
+- `--html-dir`: Directory of HTML files to scan for used CSS classes (used with `--subset`)
 
-### extract_design_system.py
+### extract-colors.py
+Extract color values from CSS files.
+```bash
+python scripts/extract-colors.py --css mirror/raw-css/style.css --output docs/colors.md
+```
+
+### extract-fonts.py
+Extract font information from a website.
+```bash
+python scripts/extract-fonts.py --url "https://example.com" --output docs/fonts.md
+```
+
+### extract-design-system.py
 Parse CSS into a structured design system JSON.
 ```bash
-python scripts/extract_design_system.py --css mirror/css/style.css --output design-system.json
+python scripts/extract-design-system.py --css mirror/css/style.css --output design-system.json
 ```
 - `--css`: Path to CSS file to analyze (required)
 - `--output`: Output JSON file path
 
-### convert_html.py
+### convert-html.py
 Batch-convert HTML files using class mapping and template structure.
 ```bash
-python scripts/convert_html.py --input archive/ --template templates/page-template.html --output pages/ --class-map class-mapping.json
+python scripts/convert-html.py --input archive/ --output pages/ --config class-mapping.json --template templates/page-template.html
 ```
 - `--input`: Directory of source HTML files (required)
-- `--template`: Reference template for target structure (required)
-- `--output`: Output directory for converted files
-- `--class-map`: JSON file mapping old classes to new classes (optional)
+- `--output`: Output directory for converted files (required)
+- `--config`: Path to JSON config file with class mappings and conversion rules (required)
+- `--template`: Optional HTML template file; content will be injected at `{{content}}` placeholder
 
-### qa_check.py
+### visual-diff.py
+Compare original and clone screenshots, generating a visual diff report.
+```bash
+python scripts/visual-diff.py --original mirror/screenshots/ --clone report/clone-screenshots/ --output report/diffs/ --threshold 95
+```
+- `--original`: Directory containing original screenshots (required)
+- `--clone`: Directory containing clone screenshots (required)
+- `--output`: Output directory for diff report and images (required)
+- `--threshold`: Similarity threshold percentage for pass/fail (default: 95)
+
+### qa-check.py
 Run automated QA checks against all pages.
 ```bash
-python scripts/qa_check.py --pages pages/ --checklist checklists/qa-checklist.md
+python scripts/qa-check.py --pages pages/ --checklist checklists/qa-checklist.md
 ```
 - `--pages`: Directory of HTML files to check (required)
 - `--checklist`: Checklist file with rules (uses default if omitted)
@@ -361,7 +358,7 @@ Identify the target site's main content wrapper class (e.g., `.entry-content.cf`
 Use `back-pain-neck-pain.html`, not `BackPainNeckPain.html` or `back_pain_neck_pain.html`. Lowercase with hyphens is URL-friendly and consistent.
 
 ### 10. Automate QA checks
-Manual QA does not scale. Write a `qa_check.py` script that validates every page against your checklist. Run it after every batch change. Fix failures immediately before they compound.
+Manual QA does not scale. Write a `qa-check.py` script that validates every page against your checklist. Run it after every batch change. Fix failures immediately before they compound.
 
 ## Project Structure
 
@@ -372,22 +369,28 @@ website-cloning-toolkit/
   LICENSE                        # MIT License
 
   playbook/                      # Step-by-step guides for each phase
+    00-overview.md               # Methodology overview
     01-capture.md                # Phase 1: Site capture
     02-extract-design-system.md  # Phase 2: Design system extraction
     03-generate-code.md          # Phase 3: Initial code generation
-    04-convert-refine.md         # Phase 4: Multi-pass refinement
+    04-convert-and-refine.md     # Phase 4: Multi-pass refinement
     05-validate.md               # Phase 5: QA and validation
     06-class-mapping.md          # Class mapping reference
-    07-lessons-learned.md        # Expanded lessons from real projects
+    08-spa-handling.md           # SPA and JS-heavy site handling
+    lessons-from-ve-project.md   # Expanded lessons from VE project
 
   scripts/                       # Python CLI tools
     requirements.txt             # Python dependencies
-    mirror_site.py               # Download site HTML + assets
-    screenshot_pages.py          # Capture full-page screenshots
-    extract_css.py               # Download and subset CSS
-    extract_design_system.py     # Parse CSS into design tokens
-    convert_html.py              # Batch HTML conversion
-    qa_check.py                  # Automated QA checker
+    scrape-site.py               # Scrape site HTML + optional screenshots
+    extract-css.py               # Download and subset CSS
+    extract-colors.py            # Extract color values from CSS
+    extract-fonts.py             # Extract font information
+    extract-design-system.py     # Parse CSS into design tokens
+    convert-html.py              # Batch HTML conversion
+    visual-diff.py               # Visual screenshot comparison
+    qa-check.py                  # Automated QA checker
+    a11y-check.py                # Accessibility checker
+    run-pipeline.py              # Full pipeline orchestration
 
   templates/                     # Starter templates
     static-site/                 # Plain HTML/CSS template
@@ -398,11 +401,20 @@ website-cloning-toolkit/
 
   checklists/                    # QA and process checklists
     qa-checklist.md              # Visual and structural QA
-    pre-launch.md                # Pre-delivery verification
+    fidelity-checklist.md        # Design fidelity verification
+    pre-clone-checklist.md       # Pre-cloning preparation
 
   mcp-config/                    # MCP server configurations
-    playwright.json              # Playwright MCP config
-    firecrawl.json               # Firecrawl MCP config
+    claude-mcp-settings.json     # Claude MCP server config
+    recommended-servers.md       # MCP server recommendations
+    setup-mcp.sh                 # MCP setup script
+
+  orchestration/                 # Pipeline orchestration configs
+
+  .claude/
+    agents/                      # Agent team configurations
+
+  tests/                         # Test suite
 
   examples/                      # Real-world case studies
     ve-chiropractic/             # VanEveryChiropractic.com clone

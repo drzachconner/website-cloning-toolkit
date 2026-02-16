@@ -16,6 +16,14 @@ screenshots/
 diff-report/
 *.pyc
 
+# Generated artifacts
+report/
+fonts/
+design-system.json
+*.har
+*.warc
+project-*/
+
 # Environment
 .env
 .env.*
@@ -27,3 +35,7 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Test artifacts
+.pytest_cache/
+__pycache__/

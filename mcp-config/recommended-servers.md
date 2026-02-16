@@ -106,19 +106,32 @@ MCP (Model Context Protocol) servers extend Claude Code with browser automation,
 
 ### Crawl4AI MCP
 
-**What it does:** Self-hosted web crawling and scraping framework. Open-source alternative to Firecrawl that runs locally with no API limits.
+**What it does:** Open-source web crawling and scraping framework with built-in browser automation. Runs locally with no API limits and supports JS-rendered pages out of the box via its integrated Playwright-based browser engine.
 
 **When to use it:**
 - High-volume scraping where Firecrawl's free tier isn't enough
+- JS-rendered pages (SPAs, dynamic content) that need a real browser to extract content
 - Projects where data shouldn't leave your machine
 - Custom extraction logic with CSS/XPath selectors
 - Offline or air-gapped environments
 
-**Why it matters:** No API key required, no rate limits, no costs. If you're scraping hundreds of pages or need complete control over the crawling process, Crawl4AI is the way to go.
+**Why it matters:** No API key required, no rate limits, no costs. Crawl4AI uses a headless browser internally, making it excellent for JS-rendered pages that return empty shells with simple HTTP requests. If you're scraping hundreds of pages or need complete control over the crawling process, Crawl4AI is the way to go.
 
-**Best at:** Large-scale, self-hosted scraping with full control over the extraction pipeline.
+**Best at:** Large-scale, self-hosted scraping of JS-rendered sites with full control over the extraction pipeline.
 
 **API keys:** None (self-hosted).
+
+**MCP configuration:**
+```json
+{
+  "mcpServers": {
+    "crawl4ai": {
+      "command": "uvx",
+      "args": ["crawl4ai-mcp"]
+    }
+  }
+}
+```
 
 **Setup:** See [github.com/unclecode/crawl4ai](https://github.com/unclecode/crawl4ai) for installation and MCP server configuration.
 
@@ -134,3 +147,57 @@ MCP (Model Context Protocol) servers extend Claude Code with browser automation,
 | Large site (100+ pages) | Firecrawl or Crawl4AI + Screenshot MCP |
 | CMS-hosted (Vortala, Wix) | Playwright + Firecrawl |
 | Quick visual audit | Screenshot MCP only |
+
+---
+
+## Troubleshooting
+
+Common issues when setting up and using MCP servers for website cloning.
+
+### MCP server not starting
+
+**Symptoms:** Server fails to launch, "command not found" errors, or timeouts during initialization.
+
+**Fixes:**
+- **Check Node.js version:** Most MCP servers require Node.js 18+. Run `node --version` to verify. If outdated, install the latest LTS from [nodejs.org](https://nodejs.org).
+- **Clear npx cache:** Stale cached packages can cause startup failures. Run `npx clear-npx-cache` or manually delete the npx cache directory (`~/.npm/_npx/`).
+- **Check for global conflicts:** If you have the MCP server package installed globally, it may conflict with the npx version. Uninstall the global version with `npm uninstall -g <package>`.
+- **Verbose logging:** Run the MCP server command directly in a terminal to see full error output before configuring it in Claude Code.
+
+### Playwright not installed
+
+**Symptoms:** "Executable doesn't exist" errors, "browserType.launch: Browser is not installed" messages.
+
+**Fixes:**
+- **Install browser binaries:** Playwright requires separate browser binary downloads. Run:
+  ```bash
+  npx playwright install chromium
+  ```
+- **System dependencies (Linux):** On Linux, Playwright needs system libraries. Run:
+  ```bash
+  npx playwright install-deps chromium
+  ```
+- **Verify installation:** Test that Playwright works with:
+  ```bash
+  python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.chromium.launch(); b.close(); p.stop(); print('OK')"
+  ```
+
+### Firecrawl rate limits
+
+**Symptoms:** 429 (Too Many Requests) responses, "rate limit exceeded" errors, incomplete crawl results.
+
+**Fixes:**
+- **Use an API key:** The free tier without an API key has aggressive rate limits. Sign up at [firecrawl.dev](https://firecrawl.dev) for 500 free pages/month.
+- **Implement backoff:** When scripting against Firecrawl, add exponential backoff between requests. Start with 1-second delays, doubling on each 429 response up to 30 seconds.
+- **Batch strategically:** Use `firecrawl_crawl` for whole-site crawls instead of calling `firecrawl_scrape` on each page individually. The crawl endpoint handles rate limiting internally.
+- **Use Crawl4AI as fallback:** If you consistently hit Firecrawl limits, switch to Crawl4AI for unlimited self-hosted scraping.
+
+### Connection refused errors
+
+**Symptoms:** "ECONNREFUSED" errors, "Connection refused" on localhost ports, MCP server appears to start but Claude Code cannot connect.
+
+**Fixes:**
+- **Check port conflicts:** Another process may be using the same port. Run `lsof -i :<port>` (macOS/Linux) or `netstat -ano | findstr :<port>` (Windows) to identify conflicts.
+- **Firewall/antivirus:** Some security software blocks local server connections. Temporarily disable or add an exception for the MCP server process.
+- **Restart the MCP server:** Kill any orphaned MCP server processes and restart Claude Code. Stale processes from crashed sessions can hold ports open.
+- **Check stdio vs. HTTP mode:** Some MCP servers communicate via stdio (stdin/stdout) rather than HTTP. Ensure your configuration matches the server's expected transport mode. Playwright MCP and Firecrawl MCP use stdio by default.
