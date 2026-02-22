@@ -1,0 +1,64 @@
+{
+  "name": "react-template-pipeline",
+  "description": "End-to-end pipeline for creating a new chiropractic client website from a Wix/Squarespace source site",
+  "steps": [
+    {
+      "id": "extract-content",
+      "name": "Extract Site Content",
+      "script": "scripts/extract-site-content.py",
+      "args": ["--url", "{{SOURCE_URL}}", "--output", "{{PROJECT_DIR}}/client-content.json"],
+      "description": "Scrape business content from the client's existing website"
+    },
+    {
+      "id": "generate-site-ts",
+      "name": "Generate site.ts",
+      "script": "scripts/generate-site-ts.py",
+      "args": ["--input", "{{PROJECT_DIR}}/client-content.json", "--output", "{{PROJECT_DIR}}/src/data/site.ts", "--domain", "{{DOMAIN}}"],
+      "depends_on": ["extract-content"],
+      "description": "Transform extracted content into a valid site.ts configuration file"
+    },
+    {
+      "id": "setup-template",
+      "name": "Setup Template",
+      "type": "manual",
+      "description": "Copy react-template, install deps, drop in generated site.ts, replace images",
+      "checklist": [
+        "Copy templates/react-template/ to project directory",
+        "Run npm install",
+        "Copy generated site.ts to src/data/site.ts",
+        "Replace images in public/images/",
+        "Update tailwind.config.js colors if needed"
+      ],
+      "depends_on": ["generate-site-ts"]
+    },
+    {
+      "id": "customize",
+      "name": "Customize & Review",
+      "type": "agent",
+      "agent": "template-customizer",
+      "description": "AI-assisted customization: adjust copy, verify all pages render correctly, fix any content issues",
+      "depends_on": ["setup-template"]
+    },
+    {
+      "id": "deploy",
+      "name": "Deploy to Cloudflare",
+      "type": "manual",
+      "description": "Build, deploy to Cloudflare Pages, configure DNS, verify",
+      "checklist": [
+        "npm run build (verify zero errors)",
+        "Create Cloudflare Pages project",
+        "Deploy dist/ directory",
+        "Configure custom domain",
+        "Verify SSL certificate",
+        "Test all pages on production URL",
+        "Submit to Google Search Console"
+      ],
+      "depends_on": ["customize"]
+    }
+  ],
+  "variables": {
+    "SOURCE_URL": "URL of the client's existing website",
+    "DOMAIN": "New domain for the client's site",
+    "PROJECT_DIR": "Local project directory path"
+  }
+}

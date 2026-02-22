@@ -1,0 +1,198 @@
+{
+  "businessName": "Talsky Tonal Chiropractic",
+  "shortName": "TTC",
+  "tagline": "Beyond Technique",
+  "description": "TTC Tonal Principles & Application — a complete paradigm shift into tonal chiropractic awareness. Enhances any technique by engaging the nervous system in a much more direct way, for never-ending optimization.",
+  "phone": "+1-847-744-8777",
+  "phoneDisplay": "(847) 744-8777",
+  "email": "talskytonal@gmail.com",
+  "foundingYear": "2001",
+  "priceRange": "$$",
+  "address": {
+    "street": "",
+    "city": "",
+    "region": "",
+    "postal": "",
+    "country": "US"
+  },
+  "hours": [],
+  "staff": [
+    {
+      "fullName": "Dr. Marvin Talsky",
+      "credentials": "DC",
+      "title": "Creator of Talsky Tonal Chiropractic",
+      "bio": "Dr. Marvin Talsky — known to the chiropractic world as \"Papa Marv\" — graduated from Palmer College of Chiropractic in 1963 and has dedicated over six decades to advancing the art and science of chiropractic. In 1995, he co-founded Torque Release Technique (TRT) alongside Dr. Jay Holder, helping to establish one of the most widely taught tonal techniques in the profession. Building on that foundation, Papa Marv created Talsky Tonal Chiropractic (TTC) in 2001, a paradigm shift that goes beyond technique to engage the nervous system in a much more direct way. Through seminars, online modules, papers, and books, Papa Marv continues to train chiropractors worldwide in tonal principles and their application. His teaching integrates quantum physics principles and consciousness into the chiropractic adjustment, guiding practitioners from a mechanistic approach to one rooted in tonal awareness.",
+      "education": "Palmer College of Chiropractic",
+      "educationWikidata": "https://www.wikidata.org/wiki/Q7127tried",
+      "imageUrl": "/images/papa-marv.webp",
+      "expertise": [
+        "Talsky Tonal Chiropractic",
+        "Torque Release Technique (TRT)",
+        "Tonal Chiropractic Principles",
+        "Nervous System Optimization",
+        "Chiropractic Education & Training"
+      ],
+      "certifications": [
+        {
+          "type": "degree",
+          "name": "Doctor of Chiropractic"
+        },
+        {
+          "type": "certification",
+          "name": "Co-Founder, Torque Release Technique (TRT)"
+        },
+        {
+          "type": "certification",
+          "name": "Creator, Talsky Tonal Chiropractic (TTC)"
+        }
+      ]
+    }
+  ],
+  "booking": {
+    "provider": "regfox",
+    "url": "https://talskytonalchiropractic.regfox.com/talsky-tonal-chiropractic-union-city-ca",
+    "urlWithUtm": "https://talskytonalchiropractic.regfox.com/talsky-tonal-chiropractic-union-city-ca?utm_source=website&utm_medium=cta&utm_campaign=register-seminar"
+  },
+  "contactForm": {
+    "provider": "cloudflare-pages",
+    "recipientEmail": "talskytonal@gmail.com"
+  },
+  "socialMedia": {
+    "facebook": "https://facebook.com/groups/talskytonal",
+    "instagram": "https://instagram.com/TalskyTonal",
+    "tiktok": "https://tiktok.com/@talskytonal",
+    "youtube": "https://youtube.com/@talskytonal",
+    "linkedin": "",
+    "twitter": "",
+    "pinterest": ""
+  },
+  "images": {
+    "logo": "/images/logo.webp",
+    "heroFamily": "/images/hero-training.webp",
+    "doctorHeadshot": "/images/papa-marv.webp",
+    "contactHero": "/images/contact-hero.webp",
+    "ogImage": "/images/hero-training.webp"
+  },
+  "colors": {
+    "themeColor": "#1a1a2e",
+    "primaryDark": "#1a1a2e",
+    "primary": "#4a6fa5",
+    "primaryLight": "#6b9ac4",
+    "primaryAccent": "#3d5a80"
+  },
+  "services": [
+    {
+      "id": "tonal-training",
+      "name": "Tonal Training Programs",
+      "shortName": "Tonal Training",
+      "slug": "/training",
+      "image": "/images/tonal-training.webp",
+      "description": "Comprehensive tonal chiropractic training that enhances any technique by engaging the nervous system in a much more direct way."
+    },
+    {
+      "id": "seminars",
+      "name": "Live Seminars",
+      "shortName": "Seminars",
+      "slug": "/seminars",
+      "image": "/images/seminars.webp",
+      "description": "In-person weekend seminars where Papa Marv teaches tonal principles and hands-on application to chiropractors."
+    },
+    {
+      "id": "online-modules",
+      "name": "Online Learning Modules",
+      "shortName": "Online Modules",
+      "slug": "/online-modules",
+      "image": "/images/online-modules.webp",
+      "description": "Flexible, interactive online courses covering tonal chiropractic principles at your own pace."
+    },
+    {
+      "id": "paper-and-video",
+      "name": "The Talsky Tonal Paper & Videos",
+      "shortName": "Paper & Video",
+      "slug": "/resources",
+      "image": "/images/paper-video.webp",
+      "description": "The foundational Talsky Tonal paper with accompanying video content explaining tonal chiropractic awareness."
+    },
+    {
+      "id": "tonal-books",
+      "name": "Tonal Books",
+      "shortName": "Books",
+      "slug": "/tonal-books",
+      "image": "/images/tonal-books.webp",
+      "description": "Published works by Papa Marv on tonal chiropractic principles, quantum physics integration, and consciousness in chiropractic."
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Dr. Eric Mintz, DC",
+      "text": "This seminar reconnected me with the power of tonal chiropractic and really deepened my intent. Papa Marv's teaching goes beyond technique into awareness itself.",
+      "rating": 5,
+      "datePublished": "2025-06-15"
+    },
+    {
+      "name": "Dr. Dani Ruf, DC",
+      "text": "I am so grateful to have been able to be here this weekend. I have learned a lot and clarified so much. This training deepened my understanding of what it means to truly serve through tonal chiropractic.",
+      "rating": 5,
+      "datePublished": "2025-06-15"
+    },
+    {
+      "name": "Dr. Catherine Hegel Borud, DC",
+      "text": "Love the Notes! This is amazing work. I'm so thankful for you and being able to bring this knowledge forward. The tonal principles have transformed my practice.",
+      "rating": 5,
+      "datePublished": "2025-05-20"
+    },
+    {
+      "name": "Dr. Gabriel Matos-Rivera, DC",
+      "text": "TTC Seminar definitely deepens the understanding of what tonal chiropractic is, when comparing other techniques. It takes you to a completely different level of awareness.",
+      "rating": 5,
+      "datePublished": "2025-05-20"
+    },
+    {
+      "name": "Dr. Isaac Rice, DC",
+      "text": "One of the best seminars I have attended in terms of content, energy, and intent. Papa Marv delivers at the highest level.",
+      "rating": 5,
+      "datePublished": "2025-04-10"
+    },
+    {
+      "name": "Dr. Jamal Früster, DC",
+      "text": "My whole awareness has expanded, going to apply this to all of the other techniques I've learned. This is the missing piece I didn't know I needed.",
+      "rating": 5,
+      "datePublished": "2025-04-10"
+    },
+    {
+      "name": "Dr. Matthew Richmond, DC",
+      "text": "The seminar was necessary for the evolution of the chiropractor going from a mechanistic to a vitalistic approach. Papa Marv bridges that gap like no one else.",
+      "rating": 5,
+      "datePublished": "2025-03-15"
+    },
+    {
+      "name": "Dr. Anne-Marie DiNardo, DC",
+      "text": "This weekend was absolutely incredible! I've been practicing primarily TRT for the last 7 years and this training took my understanding to an entirely new dimension. I am so grateful to have learned from a master and meet Papa Marv.",
+      "rating": 5,
+      "datePublished": "2025-03-15"
+    }
+  ],
+  "customCopy": {
+    "heroTagline": "Beyond Technique — A Complete Paradigm Shift Into Tonal Chiropractic Awareness",
+    "aboutBio": null,
+    "footerTagline": "Training chiropractors worldwide in tonal principles since 2001.",
+    "pages": {
+      "home": {
+        "heroHeadline": "Talsky Tonal Chiropractic",
+        "heroSubheadline": "Engage the nervous system in a much more direct way — for never-ending optimization."
+      },
+      "about": {
+        "headline": "Meet Papa Marv"
+      }
+    }
+  },
+  "features": {
+    "talskyTonal": true,
+    "eventsWorkshops": true,
+    "freeGuides": false,
+    "networkSpinal": false,
+    "kst": false
+  },
+  "sourceUrl": "https://talskytonal.com",
+  "extractedAt": "2026-02-18T12:41:29Z"
+}

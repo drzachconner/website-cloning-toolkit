@@ -1,9 +1,5 @@
 playwright>=1.40.0
 beautifulsoup4>=4.12.0
-Pillow>=10.0.0
-requests>=2.31.0
-cssutils>=2.9.0
+httpx>=0.25.0
 lxml>=4.9.0
-scikit-image>=0.22.0    # SSIM for visual-diff.py
-numpy>=1.24.0           # Required by scikit-image
-pytest>=7.0.0           # Testing
+Pillow>=10.0.0

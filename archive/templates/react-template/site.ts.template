@@ -1,0 +1,370 @@
+/**
+ * SITE CONFIGURATION
+ *
+ * This is the SINGLE SOURCE OF TRUTH for all office-specific information.
+ * When setting up a new office website, replace all {{PLACEHOLDER}} values
+ * with the client's actual data.
+ *
+ * See NEW_OFFICE_SETUP.md for complete instructions.
+ */
+
+export const SITE = {
+  // ============================================
+  // BUSINESS IDENTITY
+  // ============================================
+  // TODO: Replace with client business info
+  name: '{{BUSINESS_NAME}}',                    // e.g. 'Body Mind Chiropractic'
+  shortName: '{{SHORT_NAME}}',                  // e.g. 'Body Mind Chiro' (used for alternate name in schema)
+  domain: '{{DOMAIN}}',                         // e.g. 'bodymindchiro.com' (no protocol)
+  description: '{{META_DESCRIPTION}}',          // e.g. 'Pediatric, prenatal & family chiropractor in Rochester Hills, MI...'
+  tagline: '{{TAGLINE}}',                       // e.g. 'Your Health and Happiness'
+  foundingYear: '{{FOUNDING_YEAR}}',            // e.g. '2020'
+  priceRange: '$$',                             // Schema.org: '$', '$$', '$$$', '$$$$'
+
+  // ============================================
+  // DOCTOR / PRACTITIONER INFO
+  // ============================================
+  // TODO: Replace with practitioner details
+  doctor: {
+    fullName: '{{DOCTOR_FULL_NAME}}',           // e.g. 'Dr. John Johr'
+    firstName: '{{DOCTOR_FIRST_NAME}}',         // e.g. 'John'
+    lastName: '{{DOCTOR_LAST_NAME}}',           // e.g. 'Johr'
+    honorificPrefix: 'Dr.',
+    honorificSuffix: 'DC',
+    credentials: '{{CREDENTIALS}}',             // e.g. 'DC' or 'DC, CACCP'
+    title: '{{DOCTOR_TITLE}}',                  // e.g. 'Neurologically-Focused Chiropractor'
+    bio: '{{DOCTOR_BIO}}',                      // Full bio paragraph for the About page
+    education: '{{EDUCATION}}',                 // e.g. 'Life University College of Chiropractic'
+    educationWikidata: '{{EDUCATION_WIKIDATA}}', // e.g. 'https://www.wikidata.org/wiki/Q6545465' (optional, for schema.org)
+    image: '/images/{{DOCTOR_IMAGE_FILENAME}}', // e.g. '/images/dr-john.webp'
+    pageSlug: '/{{DOCTOR_PAGE_SLUG}}',          // e.g. '/meet-dr-john'
+    schemaId: '{{SCHEMA_ID}}',                  // e.g. 'dr-john' (used for @id in schema.org)
+    expertise: [
+      // TODO: List all techniques and specialties
+      // e.g. 'Talsky Tonal Chiropractic',
+      // e.g. 'NetworkSpinal',
+      // e.g. 'Pediatric Chiropractic',
+      // e.g. 'Prenatal Chiropractic',
+      // e.g. 'Family Chiropractic',
+      '{{EXPERTISE_1}}',
+      '{{EXPERTISE_2}}',
+      '{{EXPERTISE_3}}',
+    ],
+    certifications: [
+      // TODO: List degrees and certifications
+      {
+        type: 'degree',
+        name: 'Doctor of Chiropractic',
+      },
+      // {
+      //   type: 'certification',
+      //   name: '{{CERTIFICATION_NAME}}',       // e.g. 'NetworkSpinal Level 3 Certified'
+      // },
+    ],
+  },
+
+  // ============================================
+  // CONTACT INFORMATION
+  // ============================================
+  // TODO: Replace with client contact info
+  phone: '{{PHONE_E164}}',                      // e.g. '+1-248-464-9697' (E.164 format for tel: links)
+  phoneDisplay: '{{PHONE_DISPLAY}}',            // e.g. '(248) 464-9697' (human-readable format)
+  email: '{{EMAIL}}',                           // e.g. 'dr.john@bodymindchiro.com'
+
+  // ============================================
+  // PHYSICAL ADDRESS
+  // ============================================
+  // TODO: Replace with office address
+  address: {
+    street: '{{STREET_ADDRESS}}',               // e.g. '1460 Walton Blvd., Ste. 210'
+    city: '{{CITY}}',                           // e.g. 'Rochester Hills'
+    region: '{{STATE}}',                        // e.g. 'MI' (two-letter abbreviation)
+    postal: '{{ZIP}}',                          // e.g. '48309'
+    country: 'US',
+    // Full formatted address for display
+    formatted: '{{FORMATTED_ADDRESS}}',         // e.g. '1460 Walton Blvd., Ste. 210, Rochester Hills, MI 48309'
+  },
+
+  // ============================================
+  // GEOGRAPHIC DATA (for maps & schema.org)
+  // ============================================
+  // TODO: Look up exact coordinates on Google Maps
+  geo: {
+    latitude: 0.0,                              // e.g. 42.6820301
+    longitude: 0.0,                             // e.g. -83.159966
+  },
+  // Google Maps place ID (look up at https://developers.google.com/maps/documentation/places/web-service/place-id)
+  googlePlaceId: '{{GOOGLE_PLACE_ID}}',         // e.g. 'ChIJBQUKW2fJJIgRZoaJtd9K7ac'
+
+  // ============================================
+  // BUSINESS HOURS
+  // ============================================
+  // TODO: Replace with actual office hours
+  hours: {
+    // Human-readable format for display on the site
+    display: [
+      '{{DAY_1}} {{TIME_RANGE_1}}',             // e.g. 'Monday 9:00 AM - 5:00 PM'
+      '{{DAY_2}} {{TIME_RANGE_2}}',             // e.g. 'Wednesday 9:00 AM - 5:00 PM'
+      '{{DAY_3}} {{TIME_RANGE_3}}',             // e.g. 'Friday 9:00 AM - 5:00 PM'
+    ],
+    // Short format for LocalBusiness schema
+    shortFormat: [
+      '{{SHORT_HOURS_1}}',                      // e.g. 'Mo 09:00-17:00'
+      '{{SHORT_HOURS_2}}',                      // e.g. 'We 09:00-17:00'
+      '{{SHORT_HOURS_3}}',                      // e.g. 'Fr 09:00-17:00'
+    ],
+    // Structured format for OpeningHoursSpecification schema
+    structured: [
+      // TODO: One entry per day the office is open
+      { dayOfWeek: '{{DAY_OF_WEEK_1}}', opens: '{{OPENS_1}}', closes: '{{CLOSES_1}}' },
+      { dayOfWeek: '{{DAY_OF_WEEK_2}}', opens: '{{OPENS_2}}', closes: '{{CLOSES_2}}' },
+      { dayOfWeek: '{{DAY_OF_WEEK_3}}', opens: '{{OPENS_3}}', closes: '{{CLOSES_3}}' },
+    ],
+  },
+
+  // ============================================
+  // BOOKING SYSTEM
+  // ============================================
+  // TODO: Replace with client's booking system
+  booking: {
+    provider: '{{BOOKING_PROVIDER}}',           // 'jane' | 'calendly' | 'acuity' | 'custom'
+    url: '{{BOOKING_URL}}',                     // e.g. 'https://officename.janeapp.com/'
+    urlWithUtm: '{{BOOKING_URL_WITH_UTM}}',     // e.g. 'https://officename.janeapp.com/?utm_source=website&utm_medium=cta&utm_campaign=request-appointment'
+  },
+
+  // Legacy aliases for backwards compatibility (use booking.url/booking.urlWithUtm for new code)
+  janeUrl: '{{BOOKING_URL}}',
+  janeUrlWithUtm: '{{BOOKING_URL_WITH_UTM}}',
+
+  // ============================================
+  // CONTACT FORM
+  // ============================================
+  contactForm: {
+    provider: 'cloudflare-pages',               // 'cloudflare-pages' | 'supabase' | 'formspree'
+    // If using Formspree, set this to your form ID
+    formspreeId: null,
+    // Email where form submissions are sent
+    recipientEmail: '{{CONTACT_FORM_EMAIL}}',   // e.g. 'dr.john@bodymindchiro.com'
+  },
+
+  // ============================================
+  // SOCIAL MEDIA
+  // ============================================
+  // TODO: Replace with client social media URLs (leave empty string '' if not applicable)
+  socials: {
+    facebook: '{{FACEBOOK_URL}}',               // e.g. 'https://facebook.com/BodyMindChiro'
+    instagram: '{{INSTAGRAM_URL}}',             // e.g. 'https://instagram.com/bodymindchiro'
+    tiktok: '{{TIKTOK_URL}}',                   // e.g. 'https://tiktok.com/@bodymindchiro'
+    youtube: '{{YOUTUBE_URL}}',                 // e.g. 'https://youtube.com/@bodymindchiro'
+    linkedin: '',                               // e.g. 'https://linkedin.com/in/dr-john'
+    twitter: '',                                // e.g. 'https://twitter.com/bodymindchiro'
+    pinterest: '',                              // e.g. 'https://pinterest.com/bodymindchiro'
+  },
+
+  // ============================================
+  // IMAGES (standardized paths in /public/images/)
+  // ============================================
+  // TODO: Replace placeholder images in public/images/ with client assets
+  images: {
+    logo: '/images/logo.webp',
+    heroFamily: '/images/hero-family.webp',
+    doctorHeadshot: '/images/{{DOCTOR_IMAGE_FILENAME}}', // e.g. '/images/dr-john.webp'
+    contactHero: '/images/contact-hero.webp',
+    ogImage: '/images/hero-family.webp',        // Default Open Graph image for social sharing (1200x630)
+    // Add additional images as needed:
+    // heroContent: '/images/hero-content.webp',
+    // onlineCourses: '/images/online-courses.webp',
+  },
+
+  // ============================================
+  // BRANDING COLORS (update tailwind.config.js to match)
+  // ============================================
+  // TODO: Replace with client brand colors
+  colors: {
+    themeColor: '{{THEME_COLOR}}',              // e.g. '#002d4e' (used in <meta name="theme-color">)
+    primaryDark: '{{COLOR_PRIMARY_DARK}}',      // e.g. '#002d4e' (nav, footer backgrounds)
+    primary: '{{COLOR_PRIMARY}}',               // e.g. '#6383ab' (buttons, links, accents)
+    primaryLight: '{{COLOR_PRIMARY_LIGHT}}',    // e.g. '#73b7ce' (hover states, light backgrounds)
+    primaryAccent: '{{COLOR_PRIMARY_ACCENT}}',  // e.g. '#405e84' (secondary buttons, borders)
+  },
+
+  // ============================================
+  // SERVICES OFFERED
+  // ============================================
+  // TODO: Replace with services this office actually offers
+  services: [
+    {
+      id: '{{SERVICE_1_ID}}',                   // e.g. 'pediatric'
+      name: '{{SERVICE_1_NAME}}',               // e.g. 'Pediatric Chiropractic Care'
+      shortName: '{{SERVICE_1_SHORT}}',         // e.g. 'Pediatric'
+      slug: '/{{SERVICE_1_SLUG}}',              // e.g. '/pediatric'
+      image: '/images/{{SERVICE_1_IMAGE}}',     // e.g. '/images/pediatric-care.webp'
+      description: '{{SERVICE_1_DESC}}',        // 1-2 sentence description for service cards
+    },
+    {
+      id: '{{SERVICE_2_ID}}',                   // e.g. 'prenatal'
+      name: '{{SERVICE_2_NAME}}',               // e.g. 'Prenatal Chiropractic Care'
+      shortName: '{{SERVICE_2_SHORT}}',         // e.g. 'Prenatal'
+      slug: '/{{SERVICE_2_SLUG}}',              // e.g. '/prenatal'
+      image: '/images/{{SERVICE_2_IMAGE}}',     // e.g. '/images/prenatal-care.webp'
+      description: '{{SERVICE_2_DESC}}',
+    },
+    {
+      id: '{{SERVICE_3_ID}}',                   // e.g. 'family'
+      name: '{{SERVICE_3_NAME}}',               // e.g. 'Family Chiropractic Care'
+      shortName: '{{SERVICE_3_SHORT}}',         // e.g. 'Family'
+      slug: '/{{SERVICE_3_SLUG}}',              // e.g. '/family'
+      image: '/images/{{SERVICE_3_IMAGE}}',     // e.g. '/images/family-care.webp'
+      description: '{{SERVICE_3_DESC}}',
+    },
+    // Add more services as needed
+  ],
+
+  // ============================================
+  // TESTIMONIALS (from Google Reviews or client-provided)
+  // ============================================
+  // TODO: Replace with real client testimonials (minimum 3 recommended for social proof)
+  testimonials: [
+    {
+      id: 1,
+      name: '{{TESTIMONIAL_1_NAME}}',           // e.g. 'Ann P.'
+      text: '{{TESTIMONIAL_1_TEXT}}',           // Full review text
+      rating: 5,                                // 1-5 star rating
+      datePublished: '{{TESTIMONIAL_1_DATE}}',  // e.g. '2025-01-15' (ISO format for schema.org)
+    },
+    {
+      id: 2,
+      name: '{{TESTIMONIAL_2_NAME}}',
+      text: '{{TESTIMONIAL_2_TEXT}}',
+      rating: 5,
+      datePublished: '{{TESTIMONIAL_2_DATE}}',
+    },
+    {
+      id: 3,
+      name: '{{TESTIMONIAL_3_NAME}}',
+      text: '{{TESTIMONIAL_3_TEXT}}',
+      rating: 5,
+      datePublished: '{{TESTIMONIAL_3_DATE}}',
+    },
+    // Add more testimonials as needed
+  ],
+
+  // ============================================
+  // FAQs (for FAQ page and schema.org FAQPage markup)
+  // ============================================
+  // TODO: Replace with client-specific FAQs (minimum 3 recommended for SEO)
+  faqs: [
+    {
+      question: '{{FAQ_1_QUESTION}}',           // e.g. 'What is neurologically-focused chiropractic care?'
+      answer: '{{FAQ_1_ANSWER}}',               // e.g. 'Neurologically-focused chiropractic...'
+    },
+    {
+      question: '{{FAQ_2_QUESTION}}',           // e.g. 'Is chiropractic safe for children?'
+      answer: '{{FAQ_2_ANSWER}}',
+    },
+    {
+      question: '{{FAQ_3_QUESTION}}',           // e.g. 'What should I expect at my first visit?'
+      answer: '{{FAQ_3_ANSWER}}',
+    },
+    {
+      question: '{{FAQ_4_QUESTION}}',           // e.g. 'Do you accept insurance?'
+      answer: '{{FAQ_4_ANSWER}}',
+    },
+    // Add more FAQs as needed
+  ],
+
+  // ============================================
+  // TRAINING PROGRAMS (optional, for schema.org OfferCatalog)
+  // Only include if the office offers educational programs
+  // ============================================
+  // trainingPrograms: [
+  //   {
+  //     type: 'Course',                        // 'Course' | 'Event' | 'Workshop'
+  //     name: '{{PROGRAM_NAME}}',
+  //     description: '{{PROGRAM_DESCRIPTION}}',
+  //   },
+  // ],
+
+  // ============================================
+  // CUSTOM COPY OVERRIDES
+  // Use these to override default template copy.
+  // Set to null to use template defaults.
+  // ============================================
+  customCopy: {
+    // Hero section tagline (uses tagline if null)
+    heroTagline: null,
+    // About page doctor bio (uses doctor.bio if null)
+    aboutBio: null,
+    // Footer tagline
+    footerTagline: null,
+    // Any page-specific overrides
+    pages: {
+      home: {
+        heroHeadline: null,                     // e.g. 'Welcome to Body Mind Chiropractic'
+        heroSubheadline: null,                  // e.g. 'Gentle care for the whole family'
+      },
+      about: {
+        headline: null,                         // e.g. 'Meet Dr. John'
+      },
+    },
+  },
+
+  // ============================================
+  // OFFICE-SPECIFIC FEATURES
+  // Enable/disable features based on what the office offers
+  // ============================================
+  // TODO: Toggle features based on client needs
+  features: {
+    // Does this office use Talsky Tonal Chiropractic?
+    talskyTonal: false,
+    // Does this office have INSiGHT scanning equipment?
+    insightScans: false,
+    // Does this office offer workshops/events?
+    eventsWorkshops: false,
+    // Does this office have downloadable guides?
+    freeGuides: false,
+    // Does this office offer NetworkSpinal?
+    networkSpinal: false,
+    // Does this office offer Koren Specific Technique?
+    kst: false,
+    // Enable chatbot widget?
+    chatbot: false,
+    // Enable admin panel?
+    adminPanel: false,
+    // Enable testimonial carousel (vs. static grid)?
+    testimonialCarousel: true,
+    // Enable JotForm embed (if using JotForm instead of built-in form)?
+    jotFormEmbed: false,
+  },
+
+  // ============================================
+  // JOTFORM (optional, only if using JotForm instead of built-in contact form)
+  // ============================================
+  // jotFormId: '{{JOTFORM_ID}}',              // e.g. '233045470374150'
+
+} as const;
+
+// ============================================
+// COMPUTED VALUES (don't modify these)
+// These are derived from the data above and
+// used by components and schema.org markup.
+// ============================================
+
+// Aggregate rating computed from testimonials
+export const aggregateRating = {
+  ratingValue: SITE.testimonials.reduce((sum, t) => sum + t.rating, 0) / SITE.testimonials.length,
+  reviewCount: SITE.testimonials.length,
+  bestRating: 5,
+  worstRating: 1,
+};
+
+// Get active social links (non-empty)
+export const activeSocials = Object.entries(SITE.socials)
+  .filter(([, url]) => url)
+  .map(([platform, url]) => ({ platform, url }));
+
+// Legacy exports for backwards compatibility with existing components
+export const { janeUrl, janeUrlWithUtm } = {
+  janeUrl: SITE.booking.url,
+  janeUrlWithUtm: SITE.booking.urlWithUtm,
+};
