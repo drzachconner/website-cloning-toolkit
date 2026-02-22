@@ -1,428 +1,266 @@
-# Website Cloning Toolkit - Claude Code Configuration
+# Website Cloning Toolkit
 
-## Project Overview
+Two-step pipeline for creating new chiropractic client websites. Scrapes content from a client's existing site, then copies bodymind-chiro-website and replaces the content.
 
-This toolkit provides a repeatable, AI-assisted workflow for cloning any website's design system and producing pixel-accurate HTML/CSS reproductions. Given a target URL, Claude Code follows a 5-phase process: capture the site, extract its design system, generate initial code, refine through multi-pass conversion, and validate the output against the original.
+## Workflow
 
-The toolkit was built from hard-won lessons cloning VanEveryChiropractic.com's condition pages (32 HTML files matching the original site's layout exactly). Those patterns are encoded here so any website can be cloned with the same rigor.
+### Step 1: Scrape the client's existing site
 
-## Website Cloning Workflow
-
-### Phase 1: Capture
-
-**Goal**: Scrape the target site's HTML, CSS, images, and fonts. Take full-page screenshots for visual reference.
-
-**Steps**:
-1. Create a project directory: `mkdir -p project-name/{mirror,screenshots,archive,css,images,pages,templates}`
-2. Mirror the target site's HTML and assets:
-   ```bash
-   python scripts/scrape-site.py --url "https://example.com" --output mirror/
-   ```
-3. Capture full-page screenshots of key pages:
-   ```bash
-   python scripts/scrape-site.py --url "https://example.com/page" --output screenshots/ --screenshots
-   ```
-4. Download the site's CSS files for analysis:
-   ```bash
-   python scripts/extract-css.py --url "https://example.com" --output mirror/css/cloned-styles.css
-   ```
-
-**Key lesson**: Screenshots are invaluable. They serve as the ground truth throughout every subsequent phase. Always capture them before doing anything else.
-
-**MCP option**: If Playwright MCP or Firecrawl MCP is available, use them instead of the Python scripts for faster, more reliable scraping. See the MCP Servers section below.
-
-### Phase 2: Extract Design System
-
-**Goal**: Analyze the captured CSS to extract colors, fonts, spacing, component patterns, and class names into a structured design-system document.
-
-**Steps**:
-1. Parse the site's CSS to extract design tokens:
-   ```bash
-   python scripts/extract-design-system.py --css mirror/css/style.css --output design-system.json
-   ```
-2. Document the design system in CLAUDE.md (or a project-specific config) with these sections:
-   - **Colors**: All hex values with their usage context (headings, body, links, hover states, backgrounds, borders)
-   - **Typography**: Font families, weights, sizes for each heading level and body text
-   - **Spacing**: Margins, padding, max-width, line-height
-   - **Components**: Each reusable CSS class with its visual purpose (callouts, CTAs, cards, dividers, etc.)
-   - **Layout**: Grid/column system, content width, responsive breakpoints
-
-3. Create a class mapping table documenting source site classes and their purposes:
-
-   | Source Class | Purpose | CSS Properties |
-   |---|---|---|
-   | `.entry-content` | Main content wrapper | max-width, margin auto |
-   | `.bldr_callout` | Pull-quote callout | italic, border-left |
-   | `.bldr_cta` | CTA button | bg color, text color, hover |
-
-**Key lesson**: Subset the CSS aggressively. A production site's CSS may be 500KB+. Extract only the rules that apply to the pages you are cloning. A 5-10KB subset CSS file is typical.
-
-### Phase 3: Generate Code
-
-**Goal**: Produce initial HTML files that use the extracted design system.
-
-**Approaches (choose one)**:
-
-**A. Screenshot-to-code (AI-assisted)**:
-- Feed screenshots to an AI code generator (Claude, screenshot-to-code tools, etc.)
-- Use the design system document as context so the AI uses the correct class names
-- This gives you a rough first draft quickly
-
-**B. Manual template construction**:
-- Build one reference template by hand using the extracted CSS classes
-- Save it in `templates/` as the canonical structure
-- Use the template as the basis for all pages
-
-**C. Conversion from existing content**:
-- If you have existing HTML content (like CMS exports), write a conversion script
-- Map old classes to new classes programmatically
-- See `scripts/convert-html.py` for the pattern
-
-**Steps**:
-1. Create a reference template: `templates/page-template.html`
-2. Validate the template against screenshots visually
-3. Generate pages from the template, either manually or via script:
-   ```bash
-   python scripts/convert-html.py --input archive/ --output pages/ --config class-mapping.json --template templates/page-template.html
-   ```
-
-**Key lesson**: Multi-pass conversion beats monolithic transformation. Do not try to convert everything in a single script run. Instead: rough structure first, then class mapping, then content refinement, then QA fixes.
-
-### Phase 4: Convert & Refine
-
-**Goal**: Iteratively improve the generated HTML until it matches the original site pixel-for-pixel.
-
-**Steps**:
-1. **Pass 1 - Structure**: Ensure every page has the correct wrapper elements, heading hierarchy, and section order
-2. **Pass 2 - Class mapping**: Replace all placeholder/generic classes with the target site's actual class names
-3. **Pass 3 - Content**: Verify all text content is preserved and correctly placed
-4. **Pass 4 - Assets**: Confirm all images, icons, and decorative elements are referenced correctly with relative paths
-5. **Pass 5 - Polish**: Fix spacing, alignment, and any visual discrepancies found during screenshot comparison
-
-Run the visual diff tool after each pass:
 ```bash
-python scripts/visual-diff.py --original screenshots/ --clone pages/ --output diff-report/
+python scripts/scrape-client-site.py --url "https://example-chiro.com" --output client-content.json
 ```
 
-**Key lesson**: Each pass should have a single focus. Trying to fix structure, classes, and content simultaneously leads to regressions.
+Extracts business name, doctor info, services, testimonials, hours, socials, images, and contact info into a single JSON file. Downloads images to a local `images/` folder. Auto-detects Wix, Squarespace, and WordPress sites. Uses schema.org JSON-LD as primary source, falls back to HTML scraping.
 
-### Phase 5: Validate
+### Step 2: Generate the new site
 
-**Goal**: Confirm every page passes the QA checklist and matches the original site visually.
+```bash
+python scripts/generate-new-site.py --content client-content.json --output ./new-client-site/ --domain newclient.com
+```
 
-**Steps**:
-1. Run the automated QA checker:
-   ```bash
-   python scripts/qa-check.py --pages pages/ --checklist checklists/qa-checklist.md
-   ```
-2. Visually compare each page against the original screenshots
-3. Walk through the QA checklist manually for edge cases
+Copies the full bodymind-chiro-website template, generates a new `src/data/site.ts` populated with client data, auto-classifies scraped images into site slots (logo, hero, headshot, etc.), and updates `package.json`.
 
-**QA checklist** (customize per project in `checklists/qa-checklist.md`):
-- [ ] No inline `<style>` tags (all styling via shared CSS)
-- [ ] External CSS link present on every page
-- [ ] Favicon link present on every page
-- [ ] Exactly one `<h1>` per page
-- [ ] All images use relative paths
-- [ ] All links point to correct destinations
-- [ ] Content wrapper class matches target site
-- [ ] No leftover placeholder text
-- [ ] All original content preserved (nothing dropped during conversion)
-- [ ] Schema.org structured data present (if applicable)
-- [ ] Page renders correctly at target site's max-width
-- [ ] No console errors when opened in browser
+## Template: bodymind-chiro-website
 
-## MCP Servers
+**Location**: `/Users/zachconnermba/Code/bodymind-chiro-website/`
 
-Use MCP (Model Context Protocol) servers when available for faster, more reliable operations.
+The template is a complete, production-ready site:
+- React 18 + TypeScript + Vite 5 + Tailwind CSS 3
+- React Router 7 with lazy-loaded pages
+- Cloudflare Pages deployment (Pages Functions for contact form + AI chatbot)
+- Full SEO: meta tags, Schema.org JSON-LD, sitemap, robots.txt
+- Components: Header, Footer, Hero, CTABanner, ContactForm, ChatbotWidget
 
-### Playwright MCP
-**When to use**: Screenshots, interactive page scraping, pages that require JavaScript rendering, visual regression testing.
-**Config**: See `mcp-config/claude-mcp-settings.json` for the full MCP configuration and `mcp-config/recommended-servers.md` for setup guidance.
-**Setup**: Run `mcp-config/setup-mcp.sh` to install and configure MCP servers.
-**Capabilities**: Navigate pages, take screenshots, extract rendered HTML (post-JS), interact with elements, wait for dynamic content.
+## What site.ts Drives
 
-### Firecrawl MCP
-**When to use**: Bulk site scraping, extracting clean HTML/markdown from multiple pages, crawling entire site sections.
-**Config**: See `mcp-config/claude-mcp-settings.json` for the full MCP configuration and `mcp-config/recommended-servers.md` for setup guidance.
-**Capabilities**: Crawl entire sites, extract structured content, handle anti-bot measures, return clean markdown.
+`src/data/site.ts` is the single source of truth for ALL content:
+- Business identity (name, tagline, description, founding year)
+- Doctor/practitioner (name, credentials, bio, education, expertise, certifications)
+- Contact info (phone, email, address, geo coordinates)
+- Business hours (display, short format, structured for schema)
+- Booking system (provider, URL)
+- Social media links
+- Images (logo, hero, headshot, contact hero, OG image)
+- Brand colors
+- Services (name, description, slug, image)
+- Testimonials (name, text, rating, date)
+- Feature flags (talskyTonal, networkSpinal, kst, events, guides)
+- Custom copy overrides (hero, about, footer)
 
-### Screenshot MCP (or similar)
-**When to use**: Automated visual comparison between original site and cloned pages, generating diff reports.
+Schema.org structured data (`src/lib/schema.ts`) is generated entirely from site.ts.
 
-### When to use scripts vs. MCP
-| Task | Use Script | Use MCP |
-|---|---|---|
-| Simple static HTML download | `scrape-site.py` | -- |
-| JS-rendered pages | -- | Playwright |
-| Full-site crawl (50+ pages) | -- | Firecrawl |
-| Screenshots for reference | `scrape-site.py --screenshots` | Playwright |
-| CSS extraction | `extract-css.py` | -- |
-| Visual diff | `visual-diff.py` | Screenshot MCP |
+## Image Auto-Classification
 
-## Script Usage
+The generator automatically classifies scraped images and places the best candidate in each site slot:
 
-All scripts are in `scripts/` and require Python 3.10+. Install dependencies first:
+| Slot | Target File | Classification Heuristics |
+|------|------------|--------------------------|
+| `logo` | `logo.webp` | Scraper tag "logo", filename "logo"/"brand", small PNG |
+| `heroFamily` | `hero-family.webp` | Scraper tag "hero", wide aspect ratio + large, filename "hero"/"banner" |
+| `doctorHeadshot` | `dr-headshot.webp` | Near-square + medium size, filename "doctor"/"headshot"/"portrait" |
+| `contactHero` | `contact-hero.webp` | Filename "contact"/"office", wide landscape photo |
+| `ogImage` | `og-image.webp` | Copies from hero if not separately matched |
+| `service-{slug}` | `{slug}.webp` | Service name matched to filename/alt text |
+
+Runner-up candidates are saved in `public/images/alternatives/{slot}/` for easy swapping. Unclassified images go to `public/images/extras/`.
+
+To supply additional images (e.g. professional photos not on the old site), use `--local-images`:
+
+```bash
+python scripts/generate-new-site.py --content client-content.json --output ./new-site/ --local-images ./extra-photos/
+```
+
+## After Generating
+
+```bash
+cd ./new-client-site/
+npm install
+# Review auto-placed images in public/images/
+# Swap with alternatives from public/images/alternatives/ if needed
+npm run dev        # Preview at localhost:5173
+# Deploy to Cloudflare Pages when ready
+```
+
+## Script Reference
+
+### scrape-client-site.py
+
+| Arg | Required | Description |
+|-----|----------|-------------|
+| `--url` | Yes | Client's existing website URL |
+| `--output` | No | Output directory (default: `./output/`) |
+
+Outputs `client-content.json` (with image metadata dicts) and an `images/` folder containing downloaded images plus `image-manifest.json` mapping filenames to metadata (URL, alt text, context, dimensions, scraper tags).
+
+### generate-new-site.py
+
+| Arg | Required | Description |
+|-----|----------|-------------|
+| `--content` | Yes | Path to client-content.json |
+| `--output` | Yes | Output directory for the new site |
+| `--domain` | No | Client's domain name |
+| `--local-images` | No | Directory of additional images to include in classification |
+
+## GSD + Teams Strategy
+
+**Project complexity**: Medium — two-step pipeline (scrape → generate)
+
+**GSD Phase Structure**:
+
+| Phase | Work | Team Approach |
+|-------|------|---------------|
+| Scraper improvements | `scrape-client-site.py` | Main agent (sequential) |
+| Generator improvements | `generate-new-site.py` | Main agent (sequential) |
+| New client site generation | Full pipeline run | GSD phases: scrape → generate → customize |
+| Multi-client batch | Multiple sites at once | Teams: one teammate per client site |
+
+**Context Management**:
+- The two scripts are loosely coupled via `client-content.json` — safe to work on independently
+- Template site (bodymind-chiro-website) is a separate repo — changes there affect ALL generated sites
+- Multi-client batch work is the primary Teams use case — each teammate generates one client site
+- Use `/gsd:resume-work` when resuming multi-session work
+
+## Dependencies
+
 ```bash
 pip install -r scripts/requirements.txt
+playwright install chromium
 ```
 
-### scrape-site.py
-Scrape a website using Playwright, saving HTML and optional screenshots.
+---
+
+## 1. Project Overview
+
+Python-based two-step website cloning pipeline for chiropractic clients. `scrape-client-site.py` scrapes an existing client website and outputs `client-content.json` with all business data and downloaded images. `generate-new-site.py` copies the bodymind-chiro-website React/Vite/Tailwind template and injects the client data to produce a ready-to-deploy site directory. The generated site requires only image review and Cloudflare Pages deployment.
+
+## 2. Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Runtime | Python 3.11+ |
+| Web scraping | Playwright >=1.40.0 (headless Chromium) |
+| HTML parsing | BeautifulSoup4 >=4.12.0, lxml >=4.9.0 |
+| HTTP client | httpx >=0.25.0 |
+| Image processing | Pillow (PIL) >=10.0.0 |
+| Data interchange | JSON (`client-content.json`) |
+| Template (output) | React 18 + TypeScript + Vite 5 + Tailwind CSS 3 |
+| Template deployment | Cloudflare Pages |
+
+Install all dependencies:
 ```bash
-python scripts/scrape-site.py --url "https://example.com" --output mirror/ --screenshots --sitemap
-```
-- `--url`: Single URL to scrape
-- `--urls-file`: Path to a text file containing URLs (one per line)
-- `--output`: Output directory for scraped content (required)
-- `--sitemap`: Discover additional URLs from the site's sitemap.xml
-- `--screenshots`: Take full-page screenshots of each page
-- `--selector`: CSS selector to extract specific content instead of full page
-
-At least one of `--url` or `--urls-file` is required.
-
-### extract-css.py
-Download and subset a site's CSS.
-```bash
-python scripts/extract-css.py --url "https://example.com" --output css/cloned-styles.css --subset --html-dir mirror/extracted/
-```
-- `--url`: Target page URL to discover CSS files from (required)
-- `--output`: Output path for the combined CSS file (required)
-- `--subset`: Subset CSS to only rules used in HTML files (requires `--html-dir`)
-- `--html-dir`: Directory of HTML files to scan for used CSS classes (used with `--subset`)
-
-### extract-colors.py
-Extract color values from CSS files.
-```bash
-python scripts/extract-colors.py --css mirror/raw-css/style.css --output docs/colors.md
+pip install -r scripts/requirements.txt
+playwright install chromium
 ```
 
-### extract-fonts.py
-Extract font information from a website.
-```bash
-python scripts/extract-fonts.py --url "https://example.com" --output docs/fonts.md
+## 3. Architecture
+
+Two-step pipeline with a JSON contract between stages:
+
+```
+Step 1: scrape-client-site.py
+  Input:  --url <existing chiro site URL>
+  Output: client-content.json (business data, image metadata)
+          images/ (downloaded images + image-manifest.json)
+
+Step 2: generate-new-site.py
+  Input:  client-content.json + images/
+  Output: new site directory (copy of bodymind-chiro-website template)
+          → src/data/site.ts populated with client data
+          → public/images/ with auto-classified images
+          → public/images/alternatives/{slot}/ runner-ups
+          → public/images/extras/ unclassified images
 ```
 
-### extract-design-system.py
-Parse CSS into a structured design system JSON.
-```bash
-python scripts/extract-design-system.py --css mirror/css/style.css --output design-system.json
-```
-- `--css`: Path to CSS file to analyze (required)
-- `--output`: Output JSON file path
+**Key design decisions:**
+- `client-content.json` is the only coupling between the two scripts — they can be run and improved independently
+- Image classification is heuristic (filename + dimensions) — always manual review required
+- The bodymind-chiro-website template is the source of truth for all generated sites; changes to it affect every future generation
 
-### convert-html.py
-Batch-convert HTML files using class mapping and template structure.
-```bash
-python scripts/convert-html.py --input archive/ --output pages/ --config class-mapping.json --template templates/page-template.html
-```
-- `--input`: Directory of source HTML files (required)
-- `--output`: Output directory for converted files (required)
-- `--config`: Path to JSON config file with class mappings and conversion rules (required)
-- `--template`: Optional HTML template file; content will be injected at `{{content}}` placeholder
-
-### visual-diff.py
-Compare original and clone screenshots, generating a visual diff report.
-```bash
-python scripts/visual-diff.py --original mirror/screenshots/ --clone report/clone-screenshots/ --output report/diffs/ --threshold 95
-```
-- `--original`: Directory containing original screenshots (required)
-- `--clone`: Directory containing clone screenshots (required)
-- `--output`: Output directory for diff report and images (required)
-- `--threshold`: Similarity threshold percentage for pass/fail (default: 95)
-
-### qa-check.py
-Run automated QA checks against all pages.
-```bash
-python scripts/qa-check.py --pages pages/ --checklist checklists/qa-checklist.md
-```
-- `--pages`: Directory of HTML files to check (required)
-- `--checklist`: Checklist file with rules (uses default if omitted)
-- `--fix`: Attempt to auto-fix common issues (default: false)
-
-## Class Mapping Patterns
-
-Class mapping is the core technique for making cloned pages match the target site. Document mappings in a JSON file or in your project's CLAUDE.md.
-
-### JSON Format
-```json
-{
-  "mappings": [
-    {
-      "source": ".old-callout",
-      "target": ".bldr_callout",
-      "notes": "Italic pull-quote with left border"
-    },
-    {
-      "source": ".old-button",
-      "target": ".bldr_cta",
-      "notes": "Primary CTA button, pink background"
-    }
-  ],
-  "wrapper": {
-    "source": ".page-content",
-    "target": ".entry-content.cf",
-    "notes": "Main content wrapper, extracted for CMS"
-  }
-}
-```
-
-### CLAUDE.md Format
-Document mappings directly in the project's CLAUDE.md for Claude Code to reference:
-```markdown
-## CSS Classes (matching target site)
-- `.entry-content.cf` - Main content wrapper
-- `.bldr_callout` - Italic quote with left border (3px solid #999)
-- `.bldr_notebox` - Gray rounded CTA box (#f1f1f1 bg)
-- `.bldr_cta` - Pink CTA button (#ed247c)
-```
-
-### Mapping Discovery Process
-1. Inspect the target site's HTML using browser DevTools or mirrored HTML
-2. Identify every CSS class used in the content area (ignore nav/footer/framework classes)
-3. For each class, document: name, visual purpose, key CSS properties
-4. Map your source content's classes (or generic tags) to target classes
-5. Validate by comparing rendered output against screenshots
-
-## QA Checklist
-
-Customize this checklist per project. Save it in `checklists/qa-checklist.md`.
-
-### Structure
-- [ ] Every page has exactly one `<h1>`
-- [ ] Content wrapper uses the target site's class name
-- [ ] Page shell (body class, wrapper divs) matches target site
-- [ ] No orphaned closing tags or malformed HTML
-
-### Styling
-- [ ] No inline `<style>` tags -- all styles in shared external CSS
-- [ ] No inline `style=""` attributes (unless matching the target site)
-- [ ] External CSS `<link>` present in every page's `<head>`
-- [ ] Favicon `<link>` present in every page's `<head>`
-
-### Content
-- [ ] All original text content preserved (nothing dropped)
-- [ ] No placeholder or Lorem Ipsum text remaining
-- [ ] Images use correct relative paths
-- [ ] All internal links point to valid destinations
-- [ ] CTA buttons link to the correct target (e.g., `/contact-us/`)
-
-### Assets
-- [ ] All image files exist at referenced paths
-- [ ] CSS file exists at referenced path
-- [ ] Favicon file exists at referenced path
-- [ ] No broken asset references
-
-### SEO & Metadata
-- [ ] `<title>` tag present and descriptive
-- [ ] `<meta name="description">` present
-- [ ] Schema.org structured data present (if applicable)
-- [ ] `lang` attribute on `<html>` tag
-
-### Visual
-- [ ] Page matches target site screenshot at full width
-- [ ] Typography (fonts, sizes, weights) matches target
-- [ ] Colors match target (headings, body, links, backgrounds)
-- [ ] Spacing and layout match target
-- [ ] Component styling matches (callouts, CTAs, cards, dividers)
-
-## Key Lessons (from VE project)
-
-These lessons were learned the hard way during the VanEveryChiropractic.com cloning project. They apply to any website cloning effort.
-
-### 1. Screenshots are your ground truth
-Always capture full-page screenshots of the target site before starting any work. Reference them at every phase. When in doubt about how something should look, check the screenshot -- not the CSS documentation.
-
-### 2. Subset CSS aggressively
-Production sites ship massive CSS files (500KB+). Do not use the full file. Extract only the rules that apply to the specific pages you are cloning. A 5-10KB subset is typical and much easier to maintain and debug.
-
-### 3. Multi-pass conversion beats monolithic scripts
-Never try to do everything in one script run. Break the conversion into focused passes: structure, then classes, then content, then assets, then polish. Each pass has a single concern, making bugs easy to spot and fix.
-
-### 4. Archive originals before any transformation
-Always copy original source files into an `archive/` directory before running any conversion. This gives you a clean rollback point and lets you diff against the originals to verify nothing was lost.
-
-### 5. Use relative paths everywhere
-All asset references (CSS, images, favicons) should use relative paths (`../css/style.css`, `../images/photo.jpg`). This makes pages work both as standalone files and when embedded into a CMS.
-
-### 6. Document the class mapping thoroughly
-The class mapping (source site classes to target site classes) is the most important reference document. Put it in your project's CLAUDE.md so Claude Code can reference it during every edit. Include the visual purpose and key CSS properties for each class.
-
-### 7. Build one perfect template first
-Before generating 30+ pages, get one template page pixel-perfect. Validate it against screenshots. Only then use it as the basis for batch generation. Fixing a bug in one template is much easier than fixing it across 30 files.
-
-### 8. The content wrapper is the integration contract
-Identify the target site's main content wrapper class (e.g., `.entry-content.cf`). This is the div that the web team will extract for CMS integration. Everything inside it must match the target site's structure exactly. Everything outside it is scaffolding for standalone preview.
-
-### 9. Name files with lowercase and hyphens
-Use `back-pain-neck-pain.html`, not `BackPainNeckPain.html` or `back_pain_neck_pain.html`. Lowercase with hyphens is URL-friendly and consistent.
-
-### 10. Automate QA checks
-Manual QA does not scale. Write a `qa-check.py` script that validates every page against your checklist. Run it after every batch change. Fix failures immediately before they compound.
-
-## Project Structure
+## 4. Directory Structure
 
 ```
 website-cloning-toolkit/
-  CLAUDE.md                      # This file -- Claude Code instructions
-  README.md                      # Project overview and quick-start
-  LICENSE                        # MIT License
-
-  playbook/                      # Step-by-step guides for each phase
-    00-overview.md               # Methodology overview
-    01-capture.md                # Phase 1: Site capture
-    02-extract-design-system.md  # Phase 2: Design system extraction
-    03-generate-code.md          # Phase 3: Initial code generation
-    04-convert-and-refine.md     # Phase 4: Multi-pass refinement
-    05-validate.md               # Phase 5: QA and validation
-    06-class-mapping.md          # Class mapping reference
-    08-spa-handling.md           # SPA and JS-heavy site handling
-    lessons-from-ve-project.md   # Expanded lessons from VE project
-
-  scripts/                       # Python CLI tools
-    requirements.txt             # Python dependencies
-    scrape-site.py               # Scrape site HTML + optional screenshots
-    extract-css.py               # Download and subset CSS
-    extract-colors.py            # Extract color values from CSS
-    extract-fonts.py             # Extract font information
-    extract-design-system.py     # Parse CSS into design tokens
-    convert-html.py              # Batch HTML conversion
-    visual-diff.py               # Visual screenshot comparison
-    qa-check.py                  # Automated QA checker
-    a11y-check.py                # Accessibility checker
-    run-pipeline.py              # Full pipeline orchestration
-
-  templates/                     # Starter templates
-    static-site/                 # Plain HTML/CSS template
-      css/                       # Cloned stylesheet goes here
-      images/                    # Cloned assets go here
-    react-clone/                 # React/Next.js template
-      src/                       # React components
-
-  checklists/                    # QA and process checklists
-    qa-checklist.md              # Visual and structural QA
-    fidelity-checklist.md        # Design fidelity verification
-    pre-clone-checklist.md       # Pre-cloning preparation
-
-  mcp-config/                    # MCP server configurations
-    claude-mcp-settings.json     # Claude MCP server config
-    recommended-servers.md       # MCP server recommendations
-    setup-mcp.sh                 # MCP setup script
-
-  orchestration/                 # Pipeline orchestration configs
-
-  .claude/
-    agents/                      # Agent team configurations
-
-  tests/                         # Test suite
-
-  examples/                      # Real-world case studies
-    ve-chiropractic/             # VanEveryChiropractic.com clone
+├── CLAUDE.md                    # This file
+├── README.md                    # User-facing pipeline overview
+├── .gitignore
+│
+├── scripts/
+│   ├── scrape-client-site.py    # Step 1: web scraper → client-content.json
+│   ├── generate-new-site.py     # Step 2: template copy + data injection
+│   └── requirements.txt         # Python dependencies
+│
+├── output/                      # Default output directory for generated sites
+│   └── {client-slug}/           # Generated site directories (gitignored)
+│
+└── archive/                     # Archived earlier script versions
 ```
 
-## Git Workflow
+**Template location (external):** `/Users/zachconnermba/Code/bodymind-chiro-website/`
 
-- Commit after completing each phase or significant batch of changes
-- Use descriptive commit messages: `"Phase 2: Extract VE design system (14 classes, 6 colors)"`
-- Keep `archive/` in version control so originals are always recoverable
-- The `mirror/`, `screenshots/`, and `diff-report/` directories are gitignored (generated artifacts)
+## 5. Development Conventions
+
+- **Python version:** 3.11+
+- **Naming:** snake_case for all Python identifiers, filenames, and JSON keys
+- **JSON contract:** `client-content.json` is the interface between the two scripts. Any schema changes must be backward-compatible or both scripts updated together
+- **No hardcoded paths:** Use `--output` and `--content` CLI args; default to relative paths
+- **Image heuristics:** Classification logic lives in `generate-new-site.py` — document any new heuristic rules inline
+- **Error handling:** Scraper should degrade gracefully (log missing fields, never crash on a single missing element)
+- **Commits:** Conventional commits — `feat:`, `fix:`, `chore:`, `docs:` with `Co-Authored-By: Claude <noreply@anthropic.com>`
+
+## 6. Environment Variables
+
+No secrets or API keys are required to run either pipeline script locally. Playwright runs a local headless Chromium browser — no external API is called during scraping.
+
+If deploy-time automation is added (e.g., auto-deploy generated sites to Cloudflare Pages), the following vault keys would be needed:
+
+| Variable | Purpose | Source |
+|----------|---------|--------|
+| `CLOUDFLARE_API_TOKEN` | Deploy generated site to Cloudflare Pages | `vault-get CLOUDFLARE_API_TOKEN` |
+| `CLOUDFLARE_ACCOUNT_ID` | Identify Cloudflare account | `vault-get CLOUDFLARE_ACCOUNT_ID` |
+
+All secrets are managed in the GPG vault at `~/.secrets/vault.env.gpg`. Never hardcode values in scripts.
+
+## 8. Known Issues
+
+- **Image classification is heuristic:** Auto-classification uses filename patterns and image dimensions. Results vary by source site quality. Always review `public/images/alternatives/{slot}/` after generation and swap in better candidates if needed.
+- **CMS detection may miss edge cases:** Wix, Squarespace, and WordPress detection is pattern-based. Unusual themes or custom CMS platforms may fall through to generic HTML scraping, which is less accurate.
+- **Schema.org JSON-LD dependency:** The scraper uses schema.org JSON-LD as its primary data source. Sites without structured data produce lower-quality `client-content.json` output requiring more manual cleanup.
+- **Generated site.ts requires manual review:** Always review the generated `src/data/site.ts` before deploying — automated data extraction is not 100% accurate.
+
+## 9. Security
+
+- No API keys or secrets are needed for local scraping — Playwright runs entirely locally
+- Generated sites inherit the bodymind-chiro-website security posture (CSP headers in `public/_headers`, no credentials in source)
+- Per-site Cloudflare tokens and API keys are managed in the GPG vault (`~/.secrets/vault.env.gpg`) and set in the Cloudflare Pages dashboard — never in committed files
+- The `output/` directory is gitignored — generated client sites should not be committed to this repo
+- Run `secrets-env-auditor` before pushing any changes to either pipeline script
+
+## 10. Subagent Orchestration
+
+| Agent | When to Use |
+|-------|-------------|
+| `codebase-explorer` | Before modifying either pipeline script — understand data flow and JSON contract between scripts |
+| `pre-push-validator` | Before pushing changes to either script |
+| `security-scanner` | If adding any network-facing functionality (e.g., auto-deploy API calls) |
+
+## 12. MCP Connections
+
+| Server | Relevance |
+|--------|-----------|
+| `filesystem` | Read/write local files during pipeline development and output review |
+
+No external MCP servers are needed for local scraping. The pipeline is entirely local: Playwright browser + Python file I/O.
+
+## 13. Completed Work
+
+- **Full two-step pipeline:** `scrape-client-site.py` and `generate-new-site.py` both working end-to-end
+- **Image auto-classification:** Heuristic slot assignment (logo, heroFamily, doctorHeadshot, contactHero, ogImage, service images) with alternatives and extras directories
+- **CMS detection:** Auto-detects Wix, Squarespace, and WordPress sites; uses schema.org JSON-LD as primary data source
+- **`--local-images` flag:** Allows supplementing scraped images with provided professional photos
+- **`image-manifest.json`:** Full metadata (URL, alt text, context tags, dimensions) saved alongside downloaded images
+- **First client generated:** `output/ttc/` — Tailored Tonal Chiropractic site generated from toolkit
+
+**Next steps:**
+- Improve schema.org fallback parsing for sites without structured data
+- Add `--dry-run` flag to preview classification without copying files
+- Consider adding Cloudflare Pages auto-deploy option post-generation
