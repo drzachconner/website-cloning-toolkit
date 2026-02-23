@@ -1,0 +1,290 @@
+{
+  "$schema": "SYNC-MANIFEST.json — Classifies every file in the Cultivate template for cross-site sync",
+  "template": "Cultivate-Wellness-Chir-Dot-Com",
+  "version": "1.0.0",
+
+  "shared": {
+    "description": "Tier 1: Copy as-is from template to target. These files are identical across sites or only reference site.ts for dynamic content.",
+    "files": [
+      "src/components/AboutThisPage.tsx",
+      "src/components/AnimateOnScroll.tsx",
+      "src/components/AuthorByline.tsx",
+      "src/components/Breadcrumbs.tsx",
+      "src/components/ChatbotWidget.tsx",
+      "src/components/conditions/ConditionApproach.tsx",
+      "src/components/conditions/ConditionBenefits.tsx",
+      "src/components/conditions/ConditionFAQ.tsx",
+      "src/components/conditions/ConditionHero.tsx",
+      "src/components/conditions/ConditionOutcomes.tsx",
+      "src/components/conditions/ConditionSymptoms.tsx",
+      "src/components/conditions/RelatedConditions.tsx",
+      "src/components/ContactForm.tsx",
+      "src/components/CTABanner.tsx",
+      "src/components/ErrorBoundary.tsx",
+      "src/components/FloatingReviewWidget.tsx",
+      "src/components/Footer.tsx",
+      "src/components/GuideForm.tsx",
+      "src/components/Header.tsx",
+      "src/components/Hero.tsx",
+      "src/components/JsonLd.tsx",
+      "src/components/MergerNotification.tsx",
+      "src/components/MobileCTA.tsx",
+      "src/components/OfficeHours.tsx",
+      "src/components/Seo.tsx",
+      "src/components/ServicesGrid.tsx",
+      "src/components/StatsBar.tsx",
+      "src/components/TestimonialSlider.tsx",
+      "src/components/WhatToExpect.tsx",
+      "src/components/WorkshopSignupForm.tsx",
+
+      "src/pages/AboutUs.tsx",
+      "src/pages/AnswerHub.tsx",
+      "src/pages/conditions/ConditionIndex.tsx",
+      "src/pages/conditions/ConditionPage.tsx",
+      "src/pages/conditions/ConditionPageWrapper.tsx",
+      "src/pages/Contact.tsx",
+      "src/pages/EventsWorkshops.tsx",
+      "src/pages/Family.tsx",
+      "src/pages/FreeGuidesForParents.tsx",
+      "src/pages/Home.tsx",
+      "src/pages/NewPatientCenter.tsx",
+      "src/pages/NewPatientForms.tsx",
+      "src/pages/NotFound.tsx",
+      "src/pages/Pediatric.tsx",
+      "src/pages/Prenatal.tsx",
+      "src/pages/Privacy.tsx",
+      "src/pages/RHKNGuide.tsx",
+      "src/pages/ScheduleAppointment.tsx",
+      "src/pages/TalskyTonal.tsx",
+      "src/pages/Thanks.tsx",
+      "src/pages/ThankYouSubmission.tsx",
+      "src/pages/ThreeStepsTransition.tsx",
+      "src/pages/ThreeWaysToPoop.tsx",
+      "src/pages/ThreeWaysToSleep.tsx",
+
+      "src/data/conditions/adult-pain/back-neck-pain.ts",
+      "src/data/conditions/adult-pain/carpal-tunnel.ts",
+      "src/data/conditions/adult-pain/disc-herniation-degenerative.ts",
+      "src/data/conditions/adult-pain/headaches-migraines.ts",
+      "src/data/conditions/adult-pain/pinched-nerves.ts",
+      "src/data/conditions/adult-pain/posture-tech-neck.ts",
+      "src/data/conditions/adult-pain/sciatica.ts",
+      "src/data/conditions/adult-pain/spinal-stenosis.ts",
+      "src/data/conditions/adult-pain/tmj-jaw-pain.ts",
+      "src/data/conditions/adult-pain/vertigo-dizziness.ts",
+      "src/data/conditions/adult-pain/whiplash-auto-injury.ts",
+      "src/data/conditions/general-wellness/acid-reflux-gerd.ts",
+      "src/data/conditions/general-wellness/allergies-respiratory.ts",
+      "src/data/conditions/general-wellness/anxiety-stress.ts",
+      "src/data/conditions/general-wellness/arthritis.ts",
+      "src/data/conditions/general-wellness/asthma.ts",
+      "src/data/conditions/general-wellness/chronic-fatigue.ts",
+      "src/data/conditions/general-wellness/digestive-gi-issues.ts",
+      "src/data/conditions/general-wellness/fibromyalgia.ts",
+      "src/data/conditions/general-wellness/gentle-chiropractic.ts",
+      "src/data/conditions/general-wellness/ibs.ts",
+      "src/data/conditions/general-wellness/immune-support.ts",
+      "src/data/conditions/icon-map.ts",
+      "src/data/conditions/index.ts",
+      "src/data/conditions/neurological/pandas-pans.ts",
+      "src/data/conditions/neurological/seizure-disorders.ts",
+      "src/data/conditions/neurological/sleep-disorders.ts",
+      "src/data/conditions/pediatric/adhd-focus-issues.ts",
+      "src/data/conditions/pediatric/autism-neurodevelopmental.ts",
+      "src/data/conditions/pediatric/bedwetting-enuresis.ts",
+      "src/data/conditions/pediatric/colic-infant-digestive.ts",
+      "src/data/conditions/pediatric/developmental-delays.ts",
+      "src/data/conditions/pediatric/ear-infections.ts",
+      "src/data/conditions/pediatric/infant-newborn-chiropractic.ts",
+      "src/data/conditions/pediatric/plagiocephaly.ts",
+      "src/data/conditions/pediatric/sensory-processing-disorder.ts",
+      "src/data/conditions/pediatric/speech-language-delays.ts",
+      "src/data/conditions/pediatric/tongue-tie-lip-tie.ts",
+      "src/data/conditions/pediatric/torticollis.ts",
+      "src/data/conditions/pregnancy-women/breastfeeding-latch-issues.ts",
+      "src/data/conditions/pregnancy-women/postpartum-recovery.ts",
+      "src/data/conditions/pregnancy-women/pregnancy-back-pain.ts",
+      "src/data/conditions/pregnancy-women/webster-technique.ts",
+      "src/data/conditions/special-populations/concussion-post-concussion.ts",
+      "src/data/conditions/special-populations/long-covid.ts",
+      "src/data/conditions/special-populations/lyme-disease.ts",
+      "src/data/conditions/special-populations/pots-dysautonomia.ts",
+      "src/data/conditions/special-populations/scoliosis.ts",
+      "src/data/conditions/special-populations/senior-care.ts",
+      "src/data/conditions/special-populations/sports-performance.ts",
+      "src/data/conditions/types.ts",
+      "src/data/services.ts",
+
+      "src/lib/analytics.ts",
+      "src/lib/breadcrumbs.ts",
+      "src/lib/canonical.ts",
+      "src/lib/log.ts",
+      "src/lib/rate-limit.ts",
+      "src/lib/render-inline-links.tsx",
+      "src/lib/schema.ts",
+      "src/lib/validate.ts",
+
+      "src/hooks/useScrollAnimation.ts",
+      "src/hooks/useSeo.ts",
+
+      "src/main.tsx",
+      "src/index.css",
+      "src/vite-env.d.ts",
+
+      "functions/api/chat.ts",
+      "functions/api/form-handler.ts",
+      "functions/lib/rate-limit.ts",
+
+      "index.html",
+      "vite.config.ts",
+      "tailwind.config.js",
+      "src/components/AdminRedirect.tsx",
+
+      "eslint.config.js",
+      "postcss.config.js",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.node.json",
+      "scripts/prerender.js",
+
+      "public/_redirects",
+      ".gitignore",
+
+      "src/App.tsx",
+      "src/routes.ts"
+    ]
+  },
+
+  "parameterized": {
+    "description": "Tier 2: Files with site-specific hardcoded strings. After Phase 2 parameterization, most move to Tier 1.",
+    "files": [
+      {
+        "path": "public/_headers",
+        "reason": "CSP connect-src contains site-specific agent URL",
+        "phase2_target": "parameterized"
+      },
+      {
+        "path": "public/robots.txt",
+        "reason": "Sitemap URL and Host directive are site-specific",
+        "phase2_target": "parameterized"
+      },
+      {
+        "path": "wrangler.toml",
+        "reason": "Project name is site-specific (changes once per site)",
+        "phase2_target": "parameterized"
+      },
+      {
+        "path": ".github/workflows/deploy.yml",
+        "reason": "Project name, notification email are site-specific",
+        "phase2_target": "parameterized"
+      },
+      {
+        "path": "public/llms.txt",
+        "reason": "All content is site-specific",
+        "phase2_target": "parameterized"
+      },
+      {
+        "path": "package.json",
+        "reason": "name field differs per site, dependencies should stay in sync",
+        "phase2_target": "parameterized"
+      },
+      {
+        "path": "public/site.webmanifest",
+        "reason": "Site name, short_name, theme_color are site-specific",
+        "phase2_target": "parameterized"
+      }
+    ]
+  },
+
+  "unique": {
+    "description": "Tier 3: Never synced. Permanently per-site files.",
+    "files": [
+      {
+        "path": "src/data/site.ts",
+        "reason": "Entire business identity — the SITE object"
+      },
+      {
+        "path": "functions/data/system-prompt.ts",
+        "reason": "Chatbot personality per doctor (created in Phase 2)"
+      },
+      {
+        "path": "functions/lib/site-config.ts",
+        "reason": "Serverless config per site — SITE_URL, CORS, email settings (created in Phase 2)"
+      },
+      {
+        "path": "CLAUDE.md",
+        "reason": "Project-specific development instructions"
+      },
+      {
+        "path": "ADMIN_PANEL_PROMPT.md",
+        "reason": "Agent backend system prompt per site"
+      },
+      {
+        "path": "public/sitemap.xml",
+        "reason": "Route-dependent, generated per site"
+      },
+      {
+        "path": "public/images/",
+        "reason": "All branded assets are site-specific (directory)"
+      },
+      {
+        "path": "public/guides/",
+        "reason": "PDF guides may differ per site (directory)"
+      },
+      {
+        "path": "public/favicon.ico",
+        "reason": "Site-specific branding"
+      },
+      {
+        "path": "public/favicon.webp",
+        "reason": "Site-specific branding"
+      },
+      {
+        "path": "public/apple-touch-icon.png",
+        "reason": "Site-specific branding"
+      }
+    ],
+    "site_specific_pages": {
+      "description": "Pages that exist only in specific sites. These are never overwritten by sync.",
+      "cultivate_only": [
+        "src/pages/MeetDrZach.tsx",
+        "src/pages/InsightScans.tsx"
+      ],
+      "bodymind_only": [
+        "src/pages/MeetDrJohn.tsx",
+        "src/pages/KST.tsx"
+      ]
+    }
+  },
+
+  "excluded": {
+    "description": "Files excluded from sync entirely — build artifacts, tooling, docs, planning",
+    "patterns": [
+      "node_modules/",
+      "dist/",
+      ".git/",
+      ".planning/",
+      ".claude/",
+      ".bolt/",
+      "admin-backend/",
+      "package-lock.json",
+      "README.md",
+      "PRD.md",
+      "PROJECT_SUMMARY.md",
+      "IMPLEMENTATION_NOTES.md",
+      "DEPLOYMENT_CHECKLIST.md",
+      "NEW_OFFICE_SETUP.md",
+      "SITE-TEMPLATE.md",
+      "scripts/e2e-admin-verify.ts",
+      "scripts/extract-content.js",
+      "supabase/",
+      "public/changelog.json",
+      "public/humans.txt",
+      "public/security.txt",
+      ".env",
+      "vite.config.ts.timestamp-*",
+      "scripts/smoke-test.sh",
+      "scripts/test-local-admin.sh"
+    ]
+  }
+}
