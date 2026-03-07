@@ -2,6 +2,13 @@
 
 Two-step pipeline for creating new chiropractic client websites. Scrapes content from a client's existing site, then copies bodymind-chiro-website and replaces the content.
 
+## Workflow Rules
+- **ALWAYS pull before working**: Run `git pull --rebase` before making any changes. This is mandatory for multi-machine sync.
+- **ALWAYS commit and push after making changes.** After completing ANY code changes, immediately stage modified files by name, commit with a descriptive message, and push. Every change must end with a successful `git push`.
+- **Never leave files behind.** Before ending any session, run `git status` and confirm zero untracked or modified files.
+- Never use `git add .` or `git add -A` — always add specific files by name.
+- Commit message format: conventional commits (feat:, fix:, chore:, docs:). Always include `Co-Authored-By: Claude <noreply@anthropic.com>`.
+
 ## Workflow
 
 ### Step 1: Scrape the client's existing site
