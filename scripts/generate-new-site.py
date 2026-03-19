@@ -649,8 +649,6 @@ def generate_site_ts(content: dict, domain: str, image_mapping: dict[str, str] |
     w(f"    eventsWorkshops: {'true' if features.get('eventsWorkshops', False) else 'false'},")
     w(f"    // Does this office have downloadable guides?")
     w(f"    freeGuides: {'true' if features.get('freeGuides', False) else 'false'},")
-    w(f"    // Does this office offer NetworkSpinal?")
-    w(f"    networkSpinal: {'true' if features.get('networkSpinal', True) else 'false'},")
     w(f"    // Does this office offer Koren Specific Technique?")
     w(f"    kst: {'true' if features.get('kst', False) else 'false'},")
     w("  },")

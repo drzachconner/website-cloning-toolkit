@@ -45,7 +45,7 @@ The template is a complete, production-ready site:
 - Brand colors
 - Services (name, description, slug, image)
 - Testimonials (name, text, rating, date)
-- Feature flags (talskyTonal, networkSpinal, kst, events, guides)
+- Feature flags (talskyTonal, kst, events, guides)
 - Custom copy overrides (hero, about, footer)
 
 Schema.org structured data (`src/lib/schema.ts`) is generated entirely from site.ts.

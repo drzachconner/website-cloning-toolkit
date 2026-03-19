@@ -104,7 +104,7 @@ SITE = {
     image: string,           // "/images/dr-john.webp"
     pageSlug: string,        // "/meet-dr-john"
     schemaId: string,        // "dr-john"
-    expertise: string[],     // ["Talsky Tonal", "NetworkSpinal", ...]
+    expertise: string[],     // ["Talsky Tonal", "tonal chiropractic", ...]
     certifications: Array<{ type: string, name: string }>,
   },
 
@@ -217,7 +217,6 @@ These pages exist on every site but contain doctor-specific content:
 |-----------|------|-------------|
 | Talsky Tonal | `src/pages/TalskyTonal.tsx` | Doctor uses Talsky Tonal |
 | KST | `src/pages/KST.tsx` | Doctor uses Koren Specific Technique |
-| NetworkSpinal | (not yet built) | Doctor uses NetworkSpinal |
 
 ### Specialty Pages (conditional — based on services offered)
 
@@ -338,7 +337,6 @@ Everything needed from a new client to generate a complete site:
 ### Techniques
 - [ ] Which techniques does the doctor use? (generates technique pages)
   - Talsky Tonal Chiropractic
-  - NetworkSpinal
   - Koren Specific Technique (KST)
   - Other: _______________
 

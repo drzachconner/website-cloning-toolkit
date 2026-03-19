@@ -359,7 +359,7 @@ export const SITE = {
     image: string,           // "/images/dr-smith.webp"
     pageSlug: string,        // "/meet-dr-smith" or "/about"
     schemaId: string,        // "dr-smith" (for schema.org @id)
-    expertise: string[],     // ["NetworkSpinal", "Pediatric Chiropractic", ...]
+    expertise: string[],     // ["tonal chiropractic", "Pediatric Chiropractic", ...]
   },
 
   // CONTACT INFORMATION

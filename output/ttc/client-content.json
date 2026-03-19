@@ -190,8 +190,7 @@
     "talskyTonal": true,
     "eventsWorkshops": true,
     "freeGuides": false,
-    "networkSpinal": false,
-    "kst": false
+        "kst": false
   },
   "sourceUrl": "https://talskytonal.com",
   "extractedAt": "2026-02-18T12:41:29Z"
