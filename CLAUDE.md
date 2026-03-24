@@ -216,10 +216,10 @@ If deploy-time automation is added (e.g., auto-deploy generated sites to Cloudfl
 
 | Variable | Purpose | Source |
 |----------|---------|--------|
-| `CLOUDFLARE_API_TOKEN` | Deploy generated site to Cloudflare Pages | `vault-get CLOUDFLARE_API_TOKEN` |
-| `CLOUDFLARE_ACCOUNT_ID` | Identify Cloudflare account | `vault-get CLOUDFLARE_ACCOUNT_ID` |
+| `CLOUDFLARE_API_TOKEN` | Deploy generated site to Cloudflare Pages | `op item get "Website Company - Cloudflare" --fields label=CLOUDFLARE_API_TOKEN --reveal` |
+| `CLOUDFLARE_ACCOUNT_ID` | Identify Cloudflare account | `op item get "Website Company - Cloudflare" --fields label=CLOUDFLARE_ACCOUNT_ID --reveal` |
 
-All secrets are managed in the GPG vault at `~/.secrets/vault.env.gpg`. Never hardcode values in scripts.
+All secrets are managed in 1Password (Automation vault). Never hardcode values in scripts.
 
 ## 8. Known Issues
 
@@ -232,7 +232,7 @@ All secrets are managed in the GPG vault at `~/.secrets/vault.env.gpg`. Never ha
 
 - No API keys or secrets are needed for local scraping — Playwright runs entirely locally
 - Generated sites inherit the bodymind-chiro-website security posture (CSP headers in `public/_headers`, no credentials in source)
-- Per-site Cloudflare tokens and API keys are managed in the GPG vault (`~/.secrets/vault.env.gpg`) and set in the Cloudflare Pages dashboard — never in committed files
+- Per-site Cloudflare tokens and API keys are managed in 1Password (Automation vault) and set in the Cloudflare Pages dashboard — never in committed files
 - The `output/` directory is gitignored — generated client sites should not be committed to this repo
 - Run `secrets-env-auditor` before pushing any changes to either pipeline script
 
